@@ -3,20 +3,15 @@ import os, sys
 import numpy as np
 import mayavi.mlab as mi
 import matplotlib.pyplot as plt
-import plyfile as ply
-
-#from plyfile import PlyData, PlyElement
+import parseVolumeDada as pvd
 import miscGeometry as mgo
 
 class Scene(object):
     
     # Constructor
-    def __init__(self, filename):
-
-        plydata = ply.PlyData.read(filename)
-        self.vertex  = np.stack( (plydata['vertex']['x'],plydata['vertex']['y'],plydata['vertex']['z']) , axis = 1)
-        faces = plydata['face']['vertex_indices']
-        self.faces = np.array(faces.tolist()) # convert faces to Nx3 array
+    def __init__(self, boundsFilename , boundsTrans , screenFilename , screenTrans ):
+        self.boundsVertices, self.boundsFaces = pvd.ply2Poly(boundsFilename, boundsTrans)
+        self.screenVertices, self.screenFaces = pvd.ply2Poly(screenFilename, screenTrans)
         self.cams = None
         self.lights = None
     
@@ -44,7 +39,9 @@ class Scene(object):
     
     # Show system
     def showSystem(self,do_show=False,camScale=1.0):
-        mi.triangular_mesh(self.vertex[:,0],self.vertex[:,1],self.vertex[:,2],self.faces)
+        mi.triangular_mesh(self.boundsVertices[:,0],self.boundsVertices[:,1],self.boundsVertices[:,2],self.boundsFaces)
+        mi.triangular_mesh(self.screenVertices[:,0],self.screenVertices[:,1],self.screenVertices[:,2],self.screenFaces)
+        
         # Plot cameras
         if self.cams is not None:
             shape_points = camScale * np.array([[0, 0, 0],[1 ,1 ,1],[1 ,-1 ,1],[-1 ,-1 ,1],[-1 ,1 ,1],[1,1,1],[1 ,-1 ,1],[0,0,0],[-1 ,1 ,1],[-1 ,-1 ,1],[0,0,0]])

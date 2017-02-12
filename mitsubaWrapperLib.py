@@ -49,11 +49,11 @@ class Mitsuba(object):
                 self.sceneResID = self.scheduler.registerResource(self.scene)
 
         # ----------------------SET SUNSKY -----------------------
-        def SetSunSky(self, dir_vec):
+        def SetSunSky(self, dir_vec, radiance=1):
                 pmgr = PluginManager.getInstance()
                 obj = pmgr.create({
-                    'type' : 'constant',
-                    'radiance' : Spectrum(1)
+                    'type' : 'sun',
+                    'radiance' : Spectrum(radiance)
                 })
                 self.light = obj
         

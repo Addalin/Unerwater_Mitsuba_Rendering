@@ -62,7 +62,7 @@ xyz_vec = np.array([[0,0,3],
                     [0,0,3]])
 looking_dir = np.array([0,0,-1])
 up_dir      = np.array([1,0,0])
-#cams = makePolygonPath(space_between_vert,xyz_vec,looking_dir,up_dir)
+cams = makePolygonPath(space_between_vert,xyz_vec,looking_dir,up_dir)
 
 num_images = 8
 radius = 2
