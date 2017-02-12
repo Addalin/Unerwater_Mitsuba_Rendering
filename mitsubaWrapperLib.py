@@ -32,7 +32,7 @@ class Mitsuba(object):
                 self.params = params
                 # Get a reference to the thread's file resolver
                 self.fileResolver = Thread.getThread().getFileResolver()
-                scenes_path = base_path + scene_name + '/mitsuba' 
+                scenes_path = base_path + '/' + scene_name + '/mitsuba' 
                 self.fileResolver.appendPath(scenes_path)
                 paramMap = StringMap()
                 paramMap['myParameter'] = 'value'
