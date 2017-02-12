@@ -42,13 +42,57 @@ def rotScene2Mitsuba (dir_vec):
     dir_vecs_rot = np.matmul(rotX(90),dir_vecs)
     return np.reshape(dir_vecs_rot, 9 , order='F' )
 
+def calcAngleVectors(u, v):
+    '''This function generates the angle between vectos u and v in degrees'''
+    uvMul = np.dot(u, v)
+    uvNorm = np.linalg.norm(u) * np.linalg.norm(v)
+    cosTheta = uvMul / uvNorm
+    theta = np.arccos(cosTheta)* 180 / np.pi
+    return theta
 
 def rotX(theta):
-    ##  Return rotation matrix arount x axis with angle size of theta [degrees]
+    '''Return rotation matrix arount x axis with angle size of theta [degrees]'''
     theta = np.deg2rad(theta)
     return np.array([[1 ,        0     ,     0         ], 
                      [0 ,np.cos(theta) , -np.sin(theta)] ,
                      [0 ,np.sin(theta) ,  np.cos(theta)]])
+def rotZ(theta):
+    '''Return rotation matrix arount z axis with angle size of theta [degrees]'''
+    theta = np.deg2rad(theta)
+    return np.array([[np.cos(theta), -np.sin(theta), 0 ], 
+                     [np.sin(theta), np.cos(theta) , 0 ],
+                     [0 ,        0     ,     1         ]])
+
+def createCamsCirc(numViews , radius , camHeight , upDirection , target, archAngleSize = 360, horizon = np.array([0, 1, 0])):
+    '''This function creates an arch or circle path of camera's positionsm, such that:
+       center of path is at (0,0,0), with raduis size. each of numViews cameras are perpendicular to XY plane at z = camHeight
+       size of arch angle is defined by archAngleSize, and it's center is looking towords the horizon'''
+    
+    archRatio = np.float(archAngleSize) / 360
+    theta   = np.linspace( 0 , archRatio * 360, numViews )
+    axisX = np.array([1, 0, 0])
+    lookingAngle = calcAngleVectors(horizon,axisX )
+    
+    #  Rotating arche's center - looking towords the horizon
+    archCenterAngle = 180 + lookingAngle  
+    curCenter = np.median(theta)
+    #if rotateArch == 0:
+        #rotate2center = center - curCenter
+    #else:
+        #rotate2center = rotateArch - curCenter -  center
+    rotate2center = archCenterAngle - curCenter - lookingAngle  
+    theta =  np.deg2rad(theta + rotate2center)
+    
+    # Calculate cameras positions
+    xCam   = radius * np.sin(theta)
+    yCam   = radius * np.cos(theta)
+    zCam   = camHeight * np.ones(numViews)
+    
+    # Retreives numViews of toWorld transform vectors for each camera [self position, target = (0,0,0), up direction = (0,0,1)]
+    camsPos = np.vstack( ( xCam , yCam , zCam ) ).transpose()
+    cams = np.hstack((camsPos , np.zeros(camsPos.shape) + target, np.zeros(camsPos.shape) + upDirection))
+    
+    return cams
 
 def makePolygonPath(space_between_vert,xyz_vec,looking_dir,up_dir):
     t = np.linspace(0 , 1, space_between_vert+1)[:,None]
@@ -81,6 +125,7 @@ def makeCircPath(num_images,radius,z):
     return cams
 
 
+    
 # DEBUG -----------------------------
 if __name__=='__main__':
     cam   = np.array([[7,-6,5], [0,0,0], [0,0,1]])
