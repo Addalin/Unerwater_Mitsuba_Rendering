@@ -30,6 +30,7 @@ class Mitsuba(object):
         def __init__(self, base_path,scene_name,params):    
 
                 self.params = params
+                self.light = []
                 # Get a reference to the thread's file resolver
                 self.fileResolver = Thread.getThread().getFileResolver()
                 scenes_path = base_path + '/' + scene_name + '/mitsuba' 
@@ -37,7 +38,7 @@ class Mitsuba(object):
                 paramMap = StringMap()
                 paramMap['myParameter'] = 'value'
                 # Load the scene from an XML file
-                self.scene = SceneHandler.loadScene(self.fileResolver.resolve(scene_name+'.xml'), paramMap)
+                self.scene = SceneHandler.loadScene(self.fileResolver.resolve(scene_name + '.xml'), paramMap)
 
                 self.scheduler = Scheduler.getInstance()
                 # Start up the scheduling system with one worker per local core
@@ -55,7 +56,8 @@ class Mitsuba(object):
                     'type' : 'sun',
                     'radiance' : Spectrum(radiance)
                 })
-                self.light = obj
+                self.light.append(obj)
+                #self.light = obj
         
         # ----------------------SET SPOTLIGHT -----------------------
         def SetSpotlight(self, dir_vec):
@@ -70,8 +72,42 @@ class Mitsuba(object):
                         Vector(dir_vec[0,6] , dir_vec[0,7] , dir_vec[0,8])
                     )
                 })
-                self.light = obj
+                self.light.append(obj)
+#                self.light = obj
                                     
+        # ----------------------SET SCREEN -----------------------
+        def SetRectangleScreen(self, screenPos, radiance):
+                pmgr = PluginManager.getInstance()
+                resctScreen = pmgr.create({
+                    'type' : 'rectangle',
+                    'bsdf': {
+                            'type': 'diffuse',
+                            'reflectance' : Spectrum(0.78)
+
+                    },
+                    'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(0.05, 0.05, 1)),
+                    'emitter': {
+                            'type': 'area',
+                            'radiance': Spectrum(radiance)
+                    }                   
+                    
+                    })
+                self.light.append(resctScreen)                                    
+        # ----------------------SET WIDE SCREEN -----------------------
+        def SetWideScreen(self, width = 50.0 , height = 20.0, distance = 2):
+                screenXCorners = width/2* np.array([-1 , 1])
+                screenYCorners = height/2*np.array([-1 , 1])
+                resX =  500
+                resY = 200
+                dx = width / resX
+                dy = height / resY
+                
+                screenX = np.linspace( screenXCorners [0], screenXCorners [1] - dx, num=resX)
+                screenY = np.linspace( screenYCorners [0], screenYCorners [1] - dy, num=resY)
+                for x in screenX:
+                        for y in screenY:
+                                curRadiance = 1  #np.random.uniform(0, 1)  #1
+                                self.SetRectangleScreen( np.array([x, y, distance]), curRadiance)
 
         # ----------------------SET CAMERA -----------------------
         def SetCamera(self,dir_vec):
@@ -83,31 +119,38 @@ class Mitsuba(object):
                         Point( dir_vec[0,3] , dir_vec[0,4] , dir_vec[0,5]),
                         Vector(dir_vec[0,6] , dir_vec[0,7] , dir_vec[0,8])
                     ),
+                    #'focalLength': self.params['focalLength'],
+                    'fov': self.params['fov'],
+                    'fovAxis': self.params['fovAxis'],                    
                     'film' : {
-                        'type' : 'ldrfilm',
+                        'type' : 'hdrfilm',  #'mfilm',  #'ldrfilm',
                         'width' :  self.params['camWidth'],
                         'height' : self.params['camHeight'],
                     },
                     'sampler' : {
-                    'type' : 'independent',
-                    'sampleCount' : 100
-                    }#,
-                    #'medium' : {
-                        #'type' : 'homogeneous',
-                        #'sigmaT' : Spectrum(0.45),
-                        #'albedo' : Spectrum([0.7,0.7,0.9]),
-                        #'phase' : {
-                            #'type' : 'hg',
-                            #'g' : 0.2
-                        #}
-                    #}
-                })
+                               'type' :'ldsampler',
+                               'sampleCount' : self.params['sampleCount']
+                    },
+                   'medium' : {
+                                'type' : 'homogeneous',
+                                'id': 'underwater',
+                                'scale': 0.5, 
+                                'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
+                                'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
+                                #'thikness': 1, 
+                                'phase' : {
+                                        'type' : 'hg',
+                                        'g' : 0.9
+                                    }    
+                                
+                    }                            
+                }) 
                 self.cam = obj
                 
         def __createSampler(self,sampleCount):
                 pmgr = PluginManager.getInstance()
                 obj = pmgr.create({
-                    'type' : 'independent',
+                    'type' : 'ldsampler',  #'independent',
                     'sampleCount' : sampleCount 
                     })
                 self.sampler = obj                
@@ -116,7 +159,8 @@ class Mitsuba(object):
         # ----------------------RENDER-----------------------         
         def Render(self,sampleCount):
                 currScene = Scene(self.scene)
-                currScene.addChild(self.light)
+                for light in self.light:
+                        currScene.addChild(light)
                 currScene.configure()    
                 currScene.addSensor(self.cam)   
                 currScene.setSensor(self.cam) 
@@ -136,5 +180,5 @@ class Mitsuba(object):
                 film.develop(Point2i(0, 0), size, Point2i(0, 0), bitmap)
                 # End of render - get result
                 result_image = np.array(bitmap.getNativeBuffer())                                
-                
-                return result_image
+                currSceneInfo = currScene.getAABB
+                return result_image, currSceneInfo
