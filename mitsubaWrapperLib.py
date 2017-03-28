@@ -76,7 +76,7 @@ class Mitsuba(object):
 #                self.light = obj
                                     
         # ----------------------SET SCREEN -----------------------
-        def SetRectangleScreen(self, screenPos, radiance):
+        def SetRectangleScreen(self, screenPos, radiance, dx, dy):
                 pmgr = PluginManager.getInstance()
                 resctScreen = pmgr.create({
                     'type' : 'rectangle',
@@ -85,29 +85,26 @@ class Mitsuba(object):
                             'reflectance' : Spectrum(0.78)
 
                     },
-                    'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(0.05, 0.05, 1)),
+                    'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(dx / 2, dy / 2, 1)),
                     'emitter': {
                             'type': 'area',
                             'radiance': Spectrum(radiance)
-                    }                   
-                    
-                    })
+                    }
+                   })
                 self.light.append(resctScreen)                                    
         # ----------------------SET WIDE SCREEN -----------------------
-        def SetWideScreen(self, width = 50.0 , height = 20.0, distance = 2):
+        def SetWideScreen(self, width = 50.0 , height = 20.0, resX = 1, resY = 1, distance = 2, rand = False):
                 screenXCorners = width/2* np.array([-1 , 1])
                 screenYCorners = height/2*np.array([-1 , 1])
-                resX =  500
-                resY = 200
                 dx = width / resX
                 dy = height / resY
                 
-                screenX = np.linspace( screenXCorners [0], screenXCorners [1] - dx, num=resX)
-                screenY = np.linspace( screenYCorners [0], screenYCorners [1] - dy, num=resY)
+                screenX = np.linspace( screenXCorners [0] + dx / 2, screenXCorners [1] - dx / 2, num=resX)
+                screenY = np.linspace( screenYCorners [0] + dy / 2, screenYCorners [1] - dy / 2, num=resY)
                 for x in screenX:
                         for y in screenY:
-                                curRadiance = 1  #np.random.uniform(0, 1)  #1
-                                self.SetRectangleScreen( np.array([x, y, distance]), curRadiance)
+                                curRadiance = np.random.uniform(0.0, 1.0) if rand else 1.0
+                                self.SetRectangleScreen( np.array([x, y, distance]), curRadiance, dx, dy)
 
         # ----------------------SET CAMERA -----------------------
         def SetCamera(self,dir_vec):
