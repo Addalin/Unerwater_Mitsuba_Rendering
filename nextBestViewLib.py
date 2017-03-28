@@ -22,7 +22,7 @@ class Scene(object):
         else:
             self.cams = np.vstack((self.cams,obj))
             
-    # Add camera
+    # Add Light
     def addLight(self,obj):
         if self.lights==None:
             self.lights = obj
