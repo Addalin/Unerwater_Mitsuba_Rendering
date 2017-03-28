@@ -38,7 +38,7 @@ def transformLookAt(p, t, up):
 def rotScene2Mitsuba (dir_vec):
     ## Mitsuba axis is rotate 90[degrees] around x axis from nvb.Scene axis
     ### dir_vec =  [origin target up] (1X9) 
-    dir_vecs = a = np.reshape(dir_vec, (3,3), order='F')
+    dir_vecs = np.reshape(dir_vec, (3,3), order='F')
     dir_vecs_rot = np.matmul(rotX(90),dir_vecs)
     return np.reshape(dir_vecs_rot, 9 , order='F' )
 
@@ -62,6 +62,13 @@ def rotZ(theta):
     return np.array([[np.cos(theta), -np.sin(theta), 0 ], 
                      [np.sin(theta), np.cos(theta) , 0 ],
                      [0 ,        0     ,     1         ]])
+
+def setCamToWorldVec ( camsPos , upDirection, target):
+    '''Retreives toWorld transform vectors for each camera in camsPos [origin = (self position) , target = (0,0,0), up direction = (0,0,1)] '''
+
+    cams = np.hstack((camsPos , np.zeros(camsPos.shape) + target, np.zeros(camsPos.shape) + upDirection))
+    
+    return cams    
 
 def createCamsCirc(numViews , radius , camHeight , upDirection , target, archAngleSize = 360, horizon = np.array([0, 1, 0])):
     '''This function creates an arch or circle path of camera's positionsm, such that:
@@ -90,7 +97,8 @@ def createCamsCirc(numViews , radius , camHeight , upDirection , target, archAng
     
     # Retreives numViews of toWorld transform vectors for each camera [self position, target = (0,0,0), up direction = (0,0,1)]
     camsPos = np.vstack( ( xCam , yCam , zCam ) ).transpose()
-    cams = np.hstack((camsPos , np.zeros(camsPos.shape) + target, np.zeros(camsPos.shape) + upDirection))
+    cams =  setCamToWorldVec (camsPos , upDirection, target)
+    #cams = np.hstack((camsPos , np.zeros(camsPos.shape) + target, np.zeros(camsPos.shape) + upDirection))
     
     return cams
 
