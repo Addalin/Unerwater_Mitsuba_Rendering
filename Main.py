@@ -42,6 +42,7 @@ show_scene = 0
 show_results = 1
 single_view = True
 increase_samples = False
+save_results = True
 
 ## SET screen parameteres
 screenTranslation = np.array([0, 2, 0])  # screen behind the target
@@ -127,24 +128,28 @@ for numIms in numImsOp:
     
     ## SAVE results:
     resTime = strftime("%d-%m-%Y_%H-%M-%S", gmtime())
-    #saveRes = raw_input('Do you want to save resutls [ "y" | "n" ]: ')
-    #if saveRes == 'y':
-    #if numIms == nImgsNoise :
-    if single_view :
-
-        scene_type = 'cloud_single_view' + str(numIms) + 'images'+'_cloud_for_stats'
-    else:
-        scene_type = 'cloud_' + str(numIms) + 'views' 
+    
+    if save_results:
+        #saveRes = raw_input('Do you want to save resutls [ "y" | "n" ]: ')
+        #if saveRes == 'y':
+        #if numIms == nImgsNoise :
+        if single_view :
         
-    save_file_name = scene_name + "_" + resTime + "_" + scene_type     
-    save_file_name = scene_name + "_" + resTime + "_" + scene_type #raw_input('Enter file name: ')
-    sceneParams = {'nViews': numIms, 'camsRadius': camsRadius, 'camsHeight': camsHeight, 'archAngleSize': archAngleSize, 'upDirection': upDirection,
-                   'horizon': horizon, 'boundsTranslation': boundsTranslation, 'screenTranslation': screenTranslation,}
-    
-    scipy.io.savemat(resultsPath + "/" + save_file_name +'_pyCams.mat'  , mdict={'camsLookAtVectors': cams , 'camsMitsubaParam': params, 'sceneMitsubaParams': sceneParams})
-    scipy.io.savemat(resultsPath + "/" + save_file_name +'_pyImages.mat', {'renderedImagesMitsuba':simIm})
-    #scipy.io.savemat(resultsPath + "/" + save_file_name +'_pySceneInfo.mat', mdict = {'scene_info':sceneInfo})
-    
-    print resTime, 'scene type:'+scene_type+' has finished. \nResults are saved at: ', resultsPath
-    
+            scene_type = 'cloud_single_view' + str(numIms) + 'images'+'_cloud_for_stats'
+        else:
+            scene_type = 'cloud_' + str(numIms) + 'views' 
+            
+        save_file_name = scene_name + "_" + resTime + "_" + scene_type     
+        save_file_name = scene_name + "_" + resTime + "_" + scene_type #raw_input('Enter file name: ')
+        sceneParams = {'nViews': numIms, 'camsRadius': camsRadius, 'camsHeight': camsHeight, 'archAngleSize': archAngleSize, 'upDirection': upDirection,
+                       'horizon': horizon, 'boundsTranslation': boundsTranslation, 'screenTranslation': screenTranslation,}
+        
+        scipy.io.savemat(resultsPath + "/" + save_file_name +'_pyCams.mat'  , mdict={'camsLookAtVectors': cams , 'camsMitsubaParam': params, 'sceneMitsubaParams': sceneParams})
+        scipy.io.savemat(resultsPath + "/" + save_file_name +'_pyImages.mat', {'renderedImagesMitsuba':simIm})
+        #scipy.io.savemat(resultsPath + "/" + save_file_name +'_pySceneInfo.mat', mdict = {'scene_info':sceneInfo})
+        
+        print resTime, 'scene type:'+scene_type+' has finished. \nResults are saved at: ', resultsPath
+    else:
+        print resTime, 'scene type:'+scene_type+' has finished withouts saving results'
+
     
