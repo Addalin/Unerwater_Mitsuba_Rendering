@@ -1,8 +1,8 @@
 import os, sys
 
 """  mitsubaWrapperLib.py - This lib is used to operate Mitsuba  """ 
-
-mitsuba_path = 'C:/Users/addalin/Mitsuba 0.5.0 64bit/Mitsuba 0.5.0'
+mitsuba_path = os.environ['MITSUBA_PATH'].replace('\\', '/')
+#mitsuba_path = 'C:/Users/addalin/Mitsuba 0.5.0 64bit/Mitsuba 0.5.0'
 sys.path.append(mitsuba_path + '/python/2.7')
 
 # Ensure that Python will be able to find the Mitsuba core libraries
