@@ -65,13 +65,18 @@ def ply2Poly(plyFileName, transVec = None):
 if __name__=='__main__':
     print '.vol data:'
     #volfilename = 'C:/Users/addalin/Downloads/cbox/cbox/meshes/cbox_luminaire.obj'
-    volfilename = r'C:\Users\addalin\mitsuba_sim\3D_models\hetvol\smoke.vol'.replace('\\', '/') 
+    mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
+    scene_base_path    = mitsuba_sim_path + '/3D_models'
+    scene_name = 'hetvol' #'cube_with_texture'
+    volfilename = mitsuba_sim_path + '/' + scene_name + '/smoke.vol'
+    screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'screen' + '.ply'
+    
     data_vec, bounding_box , sizes = vol2data(volfilename)  
     print 'Volume Bounding box = ',bounding_box
     print 'Volume sizes [x voxels,y voxels,z voxels]  = ', sizes
     
     print '\n.ply data:'
-    screenPLYPath = r'C:\Users\addalin\mitsuba_sim\3D_models\hetvol\screen.ply'.replace('\\', '/')
+
     vertices, faces = ply2Poly(screenPLYPath, [0, 1, 0])
     print 'Polygon vertices = '
     for vertex in vertices:
