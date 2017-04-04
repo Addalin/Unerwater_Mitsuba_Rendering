@@ -13,8 +13,8 @@ from time import gmtime, strftime
 ## SET PARAMETERS:
 params = {}
 params['sampleCount'] = 100 # Samlpes per pixel
-params['camWidth']    = 1936  #2464 # 800  # 400 # Image width
-params['camHeight']   =   1458  #2056 #800   # 400 # Image hight
+params['camWidth']    = 100  #2464 # 800  # 400 # Image width
+params['camHeight']   =   100  #2056 #800   # 400 # Image hight
 #params['focalLength'] =  '12'  # focalLength in [mm]
 params['fov'] = 39.00829097
 params['fovAxis'] = 'x'
@@ -22,47 +22,53 @@ params['sensorName'] =  'ICX674' #'IMX264'
 params['lenseName'] = ''#'M1214'
 
 ## Set all file paths:
-base_path    = r'C:\Users\addalin\mitsuba_sim\3D_models'.replace('\\', '/')
+mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
+scene_base_path    = mitsuba_sim_path + '/3D_models'  
 sub_folder = 'resolution '+ str(params['camWidth']) +' X '+str(params['camHeight'])
-resultsPath = r'C:\Users\addalin\mitsuba_sim\sim_results'.replace('\\', '/')  # + '/' + sub_folder
+resultsPath = mitsuba_sim_path + '/sim_results' + '/' + sub_folder  
 
 scene_name = 'hetvol' #'cube_with_texture'
-shape_filename   = base_path + '/' + scene_name + '/mitsuba/' + scene_name + '.serialized'
-boundsPLYPath = base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
-screenPLYPath = base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply'
+shape_filename   = scene_base_path + '/' + scene_name + '/mitsuba/' + scene_name + '.serialized'
+boundsPLYPath = scene_base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
+screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply'
                      
-## PARAMETERS
-show_scene = 0
+## Set simulation parameteres
+show_scene = 1
 show_results = 1
 
+## SET screen parameteres
+screenTranslation = np.array([0, 2, 0])  # screen behind the target
+screenWidth = 50.0
+screenHeight = 20.0
+resXScreen = 50
+resYScreen = 20
+screenDist = 2.0
 
-## RUN MITSUBA
-mitsuba = mitLib.Mitsuba(base_path,scene_name,params)
+## SET common camera's parameteres
+camsRadius = 3
+camsHeight = 0
+upDirection = np.array([0,0,1])
+horizon = np.array([0, 1, 0])
+boundsTranslation = np.array([0, 0, 0])  # target
+
+## RUN MITSUBA & ADD lights and screen
+mitsuba = mitLib.Mitsuba(scene_base_path,scene_name,params)
 mitsuba.SetSunSky(np.array([[3, 3,300, 0,0,0, 0,0,1]]))
+mitsuba.SetWideScreen(screenWidth , screenHeight,resXScreen,resYScreen, screenDist, True)
 
+## RUN scenarios (varaing views positions) 
 viewsOp = np.array([1])  # np.array([4, 5, 6, 7, 8])
 for numViews in viewsOp:
-    ## creating cameras on an arch path
-    #numViews = 10
-    camsRadius = 3
-    camsHeight = 0
+    
+    ## SET cameras' positions for current scenario 
+    # Arch cameras positioning     
     if numViews != 10 :
         archAngleSize = 125
     else:
         archAngleSize = 0
-    #archAngleSize = 125
-    upDirection = np.array([0,0,1])
-    horizon = np.array([0, 1, 0])
-    boundsTranslation = np.array([0, 0, 0])  # target
-    
-    screenTranslation = np.array([0, 2, 0])  # screen behind the target
-    screenWidth = 50.0
-    screenHeight = 20.0
-    screenDist = 2.0
-    
-    # Arch camera positioning out side of the volume
     cams = mgo.createCamsCirc(numViews , camsRadius , camsHeight , upDirection , boundsTranslation , archAngleSize , horizon)
-    # Cameras positioning within the volume
+    
+    # Specipied cameras positioning 
     #xCam   = np.array([-0.5 , -0.25 , 0 ,  0.25 , 0.5])  # np.array([-0.5, -0.25, -0.25, 0.5])
     #yCam   = np.array([ -0.55 , -0.55 , -0.55 , -0.55, -0.55])  # ([]0, -0.25, -0.25 , 0])
     #zCam   = np.array([0, 0, 0 , 0 , 0])
@@ -71,21 +77,15 @@ for numViews in viewsOp:
     #camsPos = np.vstack( ( xCam , yCam , zCam ) ).transpose()
     #cams =  mgo.setCamToWorldVec(camsPos , upDirection, boundsTranslation)
     
-    ### BUILD AND SHOW SCENE
+    ## BUILD AND SHOW SCENE
     if show_scene:
         scene = nbv.Scene(boundsPLYPath , boundsTranslation , screenPLYPath , screenTranslation)
         scene.addCam(cams)
         #scene.addLight(lights)
         camScale = 0.2
-        scene.showSystem(do_plot,camScale)
+        scene.showSystem(show_scene,camScale)
     
-    
-    
-    ## RUN MITSUBA
-    #mitsuba = mitLib.Mitsuba(base_path,scene_name,params)
-    #mitsuba.SetSunSky(np.array([[3, 3,300, 0,0,0, 0,0,1]]))
-    
-    # Rendering the scene
+    ## RENDER the scene
     simIm = np.zeros((cams.shape[0],), dtype=np.object)
     currSceneInfo = []
     for i, cam in enumerate (cams):
@@ -93,11 +93,6 @@ for numViews in viewsOp:
         mitsuba.SetCamera(mitCam[None,:])    
         #light_curr = np.hstack((np.random.random([1,3])+cams[i][0:3],-cams[i][0:3][None,:]+cams[i][3:6][None,:],up_dir[None,:]))
         #mitsuba.SetSpotlight(light_curr)
-        mitsuba.SetWideScreen(screenWidth , screenHeight, screenDist)
-        #mitsuba.SetRectangleScreen( np.array([0, 0, 2]), 1)
-        #mitsuba.SetRectangleScreen( np.array([1, 0, 2]), 1)
-        #mitsuba.SetRectangleScreen( np.array([2, 0, 2]), 1)
-        #mitsuba.SetRectangleScreen( np.array([3, 0, 2]), 1)
         simIm[i] , sceneInfo = mitsuba.Render(params['sampleCount'])
         currSceneInfo.append(sceneInfo)
         print 'Rendered '+str(i + 1)+'/'+str(numViews)
@@ -112,6 +107,7 @@ for numViews in viewsOp:
     
     print 'Done rendering'
     
+    ## SAVE results:
     resTime = strftime("%d-%m-%Y_%H-%M-%S", gmtime())
     #saveRes = raw_input('Do you want to save resutls [ "y" | "n" ]: ')
     #if saveRes == 'y':
