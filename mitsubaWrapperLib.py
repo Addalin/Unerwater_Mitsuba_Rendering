@@ -1,8 +1,11 @@
 import os, sys
 
 """  mitsubaWrapperLib.py - This lib is used to operate Mitsuba  """ 
+
 mitsuba_path = os.environ['MITSUBA_PATH'].replace('\\', '/')
 #mitsuba_path = 'C:/Users/addalin/Mitsuba 0.5.0 64bit/Mitsuba 0.5.0'
+#mitsuba_path = '/home/addalin/Softwares/Mitsuba/dist'#'C:/Users/addalin/Mitsuba 0.5.0 64bit/Mitsuba 0.5.0'
+
 sys.path.append(mitsuba_path + '/python/2.7')
 
 # Ensure that Python will be able to find the Mitsuba core libraries
@@ -37,15 +40,24 @@ class Mitsuba(object):
                 self.fileResolver.appendPath(scenes_path)
                 paramMap = StringMap()
                 paramMap['myParameter'] = 'value'
-                # Load the scene from an XML file
+                
+                ## Load the scene from an XML file
                 self.scene = SceneHandler.loadScene(self.fileResolver.resolve(scene_name + '.xml'), paramMap)
-
+                
+                ## Setting & adding emmiters to scene - diffusive screen, created out of multiple sub-screens
+                self.SetWideScreen()
+                #self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
+                self.addSceneLights()
+                
+                ## Simultaneously rendering multiple versions of a scene
+                self.scene.initialize()
                 self.scheduler = Scheduler.getInstance()
-                # Start up the scheduling system with one worker per local core
+                ## Start up the scheduling system with one worker per local core
                 for i in range(0, multiprocessing.cpu_count()):
                         self.scheduler.registerWorker(LocalWorker(i, 'wrk%i' % i))
                 self.scheduler.start()
-                # Create a queue for tracking render jobs
+                
+                ## Create a queue for tracking render jobs
                 self.queue = RenderQueue()
                 self.sceneResID = self.scheduler.registerResource(self.scene)
 
@@ -57,7 +69,6 @@ class Mitsuba(object):
                     'radiance' : Spectrum(radiance)
                 })
                 self.light.append(obj)
-                #self.light = obj
         
         # ----------------------SET SPOTLIGHT -----------------------
         def SetSpotlight(self, dir_vec):
@@ -73,27 +84,41 @@ class Mitsuba(object):
                     )
                 })
                 self.light.append(obj)
-#                self.light = obj
                                     
         # ----------------------SET SCREEN -----------------------
         def SetRectangleScreen(self, screenPos, radiance, dx, dy):
+                """Set a sub-screen (rectangle shape attached to area emitter) at screenPos, with dimentions of [dx X dy],
+                With radiance radiance [Watt/(m^2*sr)] """                
                 pmgr = PluginManager.getInstance()
                 resctScreen = pmgr.create({
                     'type' : 'rectangle',
                     'bsdf': {
                             'type': 'diffuse',
-                            'reflectance' : Spectrum(0.78)
+                            'illuminant':Spectrum(1.0)
+                            #'reflectance' : Spectrum(0.78) # this is causing peaks noise in the result image - from reflections
 
                     },
-                    'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(dx / 2, dy / 2, 1)),
+                    'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(dx/2, dy/2, 1)),
                     'emitter': {
-                            'type': 'area',
-                            'radiance': Spectrum(radiance)
+                            'type': 'constant',#'area',
+                            'radiance':Spectrum(radiance),
+                            'samplingWeight':10.0                            
                     }
                    })
                 self.light.append(resctScreen)                                    
-        # ----------------------SET WIDE SCREEN -----------------------
-        def SetWideScreen(self, width = 50.0 , height = 20.0, resX = 1, resY = 1, distance = 2, rand = False):
+        # ----------------------SET WIDE SCREEN -----------------------       
+        def SetWideScreen(self):
+        # TODO : fix SetWideScreen() overriding   
+        #def SetWideScreen(self, width = 50.0 , height = 20.0, resX = 1, resY = 1, screenZPos = 2, rand = False):       
+                """Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
+                The radiance [Watt/(m^2*sr)] of screeen can be either constant [1] of variant unifomily [0,1] """
+                width = self.params['screenWidth']
+                height = self.params['screenHeight']
+                resX = self.params['resXScreen']
+                resY = self.params['resYScreen']
+                screenZPos = self.params['screenZPos']
+                rand = self.params['variantRadiance']  
+                
                 screenXCorners = width/2* np.array([-1 , 1])
                 screenYCorners = height/2*np.array([-1 , 1])
                 dx = width / resX
@@ -104,10 +129,21 @@ class Mitsuba(object):
                 for x in screenX:
                         for y in screenY:
                                 curRadiance = np.random.uniform(0.0, 1.0) if rand else 1.0
-                                self.SetRectangleScreen( np.array([x, y, distance]), curRadiance, dx, dy)
+                                self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)
+        #def SetWideScreen(self):
+                #"""Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
+                #The radiance [Watt/(m^2*sr)] of screeen can be either constant [1] of variant unifomily [0,1] """
+                #width = self.params['screenWidth']
+                #height = self.params['screenHeight']
+                #resX = self.params['resXScreen']
+                #resY = self.params['resYScreen']
+                #screenZPos = self.params['screenZPos']
+                #rand = self.params['variantRadiance']                
+                #self.SetWideScreen() = SetWideScreen(width  , height , resX , resY, screenZPos, rand )        
 
         # ----------------------SET CAMERA -----------------------
         def SetCamera(self,dir_vec):
+                """Create and pre-set a new sensor according to dir_vec""" 
                 pmgr = PluginManager.getInstance()
                 obj = pmgr.create({
                     'type' : 'perspective',
@@ -116,7 +152,7 @@ class Mitsuba(object):
                         Point( dir_vec[0,3] , dir_vec[0,4] , dir_vec[0,5]),
                         Vector(dir_vec[0,6] , dir_vec[0,7] , dir_vec[0,8])
                     ),
-                    #'focalLength': self.params['focalLength'],
+                    #'focalLength': self.params['focalLength'], # focalLength can be achived by 'fov' & 'fovAxis' 
                     'fov': self.params['fov'],
                     'fovAxis': self.params['fovAxis'],                    
                     'film' : {
@@ -125,8 +161,10 @@ class Mitsuba(object):
                         'height' : self.params['camHeight'],
                     },
                     'sampler' : {
-                               'type' :'ldsampler',
-                               'sampleCount' : self.params['sampleCount']
+                               'type' :'ldsampler',#'independent',#'ldsampler',
+                               'sampleCount' : self.params['sampleCount'],
+                               'dimension': self.params['samplerDimention']
+                               #'scramble':10
                     },
                    'medium' : {
                                 'type' : 'homogeneous',
@@ -134,7 +172,6 @@ class Mitsuba(object):
                                 'scale': 0.5, 
                                 'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
                                 'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
-                                #'thikness': 1, 
                                 'phase' : {
                                         'type' : 'hg',
                                         'g' : 0.9
@@ -144,38 +181,54 @@ class Mitsuba(object):
                 }) 
                 self.cam = obj
                 
-        def __createSampler(self,sampleCount):
+        def createSampler(self,sampleCount):
                 pmgr = PluginManager.getInstance()
                 obj = pmgr.create({
-                    'type' : 'ldsampler',  #'independent',
-                    'sampleCount' : sampleCount 
+                    'type' : 'ldsampler',#independent',#'sobol',
+                    'sampleCount' : sampleCount,
+                    #'sampleCount' : self.params['sampleCount'],
+                    # TODO: add function for updating self.params instead of passing them
+                    'dimension': self.params['samplerDimention'] #,
+                    #'scramble':10 # not sure how this is working yet
                     })
-                self.sampler = obj                
-                
-                
+                self.sampler = obj        
+
         # ----------------------RENDER-----------------------         
-        def Render(self,sampleCount):
+        def addSceneLights(self):
+                """ Adding all the pre-setted lights to the scene"""
                 currScene = Scene(self.scene)
                 for light in self.light:
-                        currScene.addChild(light)
-                currScene.configure()    
+                        currScene.addChild(light)  
+                self.scene = currScene
+                
+        # ----------------------RENDERhjk-----------------------         
+        def Render(self,sampleCount,i):
+                ## Creating a copy of the base scene and add modifications regarding varaiant camera's properties (sensor position, sampler)
+                currScene = Scene(self.scene) 
+                currScene.configure()
+                pmgr = PluginManager.getInstance()
                 currScene.addSensor(self.cam)   
                 currScene.setSensor(self.cam) 
-                self.__createSampler(sampleCount) # sample count
-                currScene.setSampler(self.sampler)
-             
+                self.createSampler(sampleCount)
+                currScene.setSampler(self.sampler) #(self.sampler)
                 currScene.setDestinationFile('')
-                # Create a render job and insert it into the queue
-                job = RenderJob('myRenderJob', currScene, self.queue )
+                
+                ## Create a render job and insert it into the queue
+                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue )
+                job = RenderJob('myRenderJob'+str(i), currScene, self.queue,self.sceneResID )  # passing self.sceneResID - in order to create shallow copy of the scene to all warkers
                 job.start()
+                
                 self.queue.waitLeft(0)
                 self.queue.join()
                 
+                ## Aquire Bitmap format of the rendered image: 
                 film = currScene.getFilm()
                 size = film.getSize()
                 bitmap = Bitmap(Bitmap.ERGBA, Bitmap.EFloat16, size)
                 film.develop(Point2i(0, 0), size, Point2i(0, 0), bitmap)
-                # End of render - get result
-                result_image = np.array(bitmap.getNativeBuffer())                                
+                
+                ## End of render - get result
+                result_image = np.array(bitmap.buffer()) if sys.platform == 'linux2' else  np.array(bitmap.getNativeBuffer())
+                # TODO : update Mitsuba version of Windows, with the updated API - bitmap.getNativeBuffer() doesn't exsists animore                        
                 currSceneInfo = currScene.getAABB
                 return result_image, currSceneInfo
