@@ -86,9 +86,10 @@ class Scene(object):
     
 if __name__=='__main__':
     print 'NBV file'
-    #scene_name = 'cube_with_texture'
-    #base_path    = 'C:/Users/markshe/Dropbox/Research/ProjectUnderwater2/3D_models/'    
-    scene = Scene(base_path + scene_name + '/' + scene_name + '.ply')
+    scene_name = 'hetvol'
+    mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
+    scene_base_path    = mitsuba_sim_path + '/3D_models'      
+    scene = Scene(scene_base_path + scene_name + '/' + scene_name + '.ply')
     cams    = np.array([[7,-6,5, 0,0,0,  0,0,1]])
     lights  = np.array([[3,0,0 , 0,0,0,  0,0,1]])
     scene.addCam(cams)
