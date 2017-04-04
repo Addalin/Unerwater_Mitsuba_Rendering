@@ -44,7 +44,7 @@ single_view = True
 increase_samples = False
 save_results = True
 
-## SET screen parameteres
+## SET SCREEN parameteres
 screenTranslation = np.array([0, 2, 0])  # screen behind the target
 
 params['screenWidth'] = 50.0
@@ -54,7 +54,7 @@ params['resYScreen'] = 200
 params['screenZPos'] = 2.0
 params['variantRadiance'] = False
 
-## SET common camera's parameteres
+## SET common CAMERA's parameteres
 camsRadius = 3
 camsHeight = 0
 upDirection = np.array([0,0,1])
@@ -67,7 +67,7 @@ mitsuba = mitLib.Mitsuba(scene_base_path,scene_name,params)
 #mitsuba.SetWideScreen(screenWidth , screenHeight,resXScreen,resYScreen, screenZPos,True)
 
 
-## RUN scenarios (varaing views positions)
+## ADJUSTING SCENE SCENARIOS (different views positions)
 nImgsNoise = 1
 numImsOp = np.array([nImgsNoise])  # np.array([4, 5, 6, 7, 8])
 for numIms in numImsOp:
@@ -81,7 +81,7 @@ for numIms in numImsOp:
     else:
         archAngleSize = 125
         cams = mgo.createCamsCirc(numIms , camsRadius , camsHeight , upDirection , boundsTranslation , archAngleSize , horizon)
-    
+    # TODO : add the option of pre-computed cameras  
     # Specipied cameras positioning 
     #xCam   = np.array([-0.5 , -0.25 , 0 ,  0.25 , 0.5])  # np.array([-0.5, -0.25, -0.25, 0.5])
     #yCam   = np.array([ -0.55 , -0.55 , -0.55 , -0.55, -0.55])  # ([]0, -0.25, -0.25 , 0])
