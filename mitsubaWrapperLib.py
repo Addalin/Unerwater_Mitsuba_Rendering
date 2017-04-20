@@ -132,17 +132,7 @@ class Mitsuba(object):
                 for x in screenX:
                         for y in screenY:
                                 curRadiance = np.random.uniform(0.0, maxRadiance) if rand else maxRadiance
-                                self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)
-        #def SetWideScreen(self):
-                #"""Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
-                #The radiance [Watt/(m^2*sr)] of screeen can be either constant [1] of variant unifomily [0,1] """
-                #width = self.params['screenWidth']
-                #height = self.params['screenHeight']
-                #resX = self.params['resXScreen']
-                #resY = self.params['resYScreen']
-                #screenZPos = self.params['screenZPos']
-                #rand = self.params['variantRadiance']                
-                #self.SetWideScreen() = SetWideScreen(width  , height , resX , resY, screenZPos, rand )        
+                                self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)      
 
         # ----------------------SET CAMERA -----------------------
         def SetCamera(self,dir_vec):
@@ -155,7 +145,7 @@ class Mitsuba(object):
                         Point( dir_vec[0,3] , dir_vec[0,4] , dir_vec[0,5]),
                         Vector(dir_vec[0,6] , dir_vec[0,7] , dir_vec[0,8])
                     ),
-                    #'focalLength': self.params['focalLength'], # focalLength can be achived by 'fov' & 'fovAxis' 
+                    #'focalLength': self.params['focalLength'], # focalLength - is rellevant to equivelent 35[mm] film, alternative definition is set by:'fov' & 'fovAxis' 
                     'fov': self.params['fov'],
                     'fovAxis': self.params['fovAxis'],
                     #'farClip':100.0,
@@ -217,10 +207,9 @@ class Mitsuba(object):
                 currScene.setDestinationFile('')
                 
                 ## Create a render job and insert it into the queue
-                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue )
                 curSceneResID = self.scheduler.registerResource(currScene)
-                job = RenderJob('myRenderJob'+str(i), currScene, self.queue,curSceneResID )
-                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue,self.sceneResID )  # passing self.sceneResID - in order to create shallow copy of the scene to all warkers
+                job = RenderJob('myRenderJob'+str(i), currScene, self.queue,curSceneResID ) # passing curSceneResID/self.sceneResID - in order to create shallow copy of the scene to all warkers
+                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue )                
                 job.start()
                 
                 self.queue.waitLeft(0)
