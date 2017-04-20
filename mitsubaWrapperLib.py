@@ -30,9 +30,10 @@ import numpy as np
 class Mitsuba(object):
         
     # Constructor
-        def __init__(self, base_path,scene_name,params):    
+        def __init__(self, base_path,scene_name,params,screenParams):    
 
                 self.params = params
+                self.screenParams = screenParams
                 self.light = []
                 # Get a reference to the thread's file resolver
                 self.fileResolver = Thread.getThread().getFileResolver()
@@ -46,7 +47,8 @@ class Mitsuba(object):
                 
                 ## Setting & adding emmiters to scene - diffusive screen, created out of multiple sub-screens
                 self.SetWideScreen()
-                #self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
+                # mitsuba.SetSunSky(np.array([[3, 300,3, 0,0,0, 0,0,1]]))
+                # TODO : fix overriding of : self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
                 self.addSceneLights()
                 
                 ## Simultaneously rendering multiple versions of a scene
@@ -100,7 +102,7 @@ class Mitsuba(object):
                     },
                     'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(dx/2, dy/2, 1)),
                     'emitter': {
-                            'type': 'constant',#'area',
+                            'type': 'area',#,'constant',#'area',
                             'radiance':Spectrum(radiance),
                             'samplingWeight':10.0                            
                     }
@@ -112,12 +114,13 @@ class Mitsuba(object):
         #def SetWideScreen(self, width = 50.0 , height = 20.0, resX = 1, resY = 1, screenZPos = 2, rand = False):       
                 """Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
                 The radiance [Watt/(m^2*sr)] of screeen can be either constant [1] of variant unifomily [0,1] """
-                width = self.params['screenWidth']
-                height = self.params['screenHeight']
-                resX = self.params['resXScreen']
-                resY = self.params['resYScreen']
-                screenZPos = self.params['screenZPos']
-                rand = self.params['variantRadiance']  
+                width = self.screenParams['screenWidth']
+                height = self.screenParams['screenHeight']
+                resX = self.screenParams['resXScreen']
+                resY = self.screenParams['resYScreen']
+                screenZPos = self.screenParams['screenZPos']
+                rand = self.screenParams['variantRadiance']  
+                maxRadiance = self.screenParams['maxRadiance']
                 
                 screenXCorners = width/2* np.array([-1 , 1])
                 screenYCorners = height/2*np.array([-1 , 1])
@@ -128,7 +131,7 @@ class Mitsuba(object):
                 screenY = np.linspace( screenYCorners [0] + dy / 2, screenYCorners [1] - dy / 2, num=resY)
                 for x in screenX:
                         for y in screenY:
-                                curRadiance = np.random.uniform(0.0, 1.0) if rand else 1.0
+                                curRadiance = np.random.uniform(0.0, maxRadiance) if rand else maxRadiance
                                 self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)
         #def SetWideScreen(self):
                 #"""Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
@@ -154,22 +157,22 @@ class Mitsuba(object):
                     ),
                     #'focalLength': self.params['focalLength'], # focalLength can be achived by 'fov' & 'fovAxis' 
                     'fov': self.params['fov'],
-                    'fovAxis': self.params['fovAxis'],                    
+                    'fovAxis': self.params['fovAxis'],
+                    #'farClip':100.0,
                     'film' : {
                         'type' : 'hdrfilm',  #'mfilm',  #'ldrfilm',
-                        'width' :  self.params['camWidth'],
-                        'height' : self.params['camHeight'],
+                        'width' :  self.params['nWidth'],
+                        'height' : self.params['nHeight'],
                     },
                     'sampler' : {
                                'type' :'ldsampler',#'independent',#'ldsampler',
                                'sampleCount' : self.params['sampleCount'],
                                'dimension': self.params['samplerDimention']
-                               #'scramble':10
                     },
                    'medium' : {
                                 'type' : 'homogeneous',
                                 'id': 'underwater',
-                                'scale': 0.5, 
+                                #'scale': 0.5, 
                                 'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
                                 'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
                                 'phase' : {
@@ -215,7 +218,9 @@ class Mitsuba(object):
                 
                 ## Create a render job and insert it into the queue
                 #job = RenderJob('myRenderJob'+str(i), currScene, self.queue )
-                job = RenderJob('myRenderJob'+str(i), currScene, self.queue,self.sceneResID )  # passing self.sceneResID - in order to create shallow copy of the scene to all warkers
+                curSceneResID = self.scheduler.registerResource(currScene)
+                job = RenderJob('myRenderJob'+str(i), currScene, self.queue,curSceneResID )
+                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue,self.sceneResID )  # passing self.sceneResID - in order to create shallow copy of the scene to all warkers
                 job.start()
                 
                 self.queue.waitLeft(0)
