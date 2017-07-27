@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene version="0.5.0">
+	<integrator type="volpath">
+		<integer name="maxDepth" value="8"/>
+	</integrator>
+
+<!--	<medium type="heterogeneous" id="smoke">
+		<string name="method" value="woodcock"/>
+
+		<volume name="density" type="gridvolume">
+			<string name="filename" value="smoke.vol"/>
+			<transform name="toWorld">
+				<rotate z="1" angle="180"/>
+				<translate x="-0.6" y="-0.6" z="0"/>
+			</transform>
+		</volume>
+		<float name="scale" value="50"/>
+
+		<volume name="albedo" type="constvolume">
+			<rgb name="value" value="0.5"/>
+		</volume>
+
+		<phase type="hg">
+			<float name="g" value="0.9"/>
+		</phase>
+	</medium>
+
+	<shape type="obj" id="smoke_bounding_box">
+		<string name="filename" value="bounds.obj"/>
+		<transform name="toWorld">
+			<translate x="-0.6" y="-0.6" z="0"/>
+		</transform>
+
+		<ref name="interior" id="smoke"/>
+	</shape> -->
+
+	<medium type="heterogeneous" id="smoke1">
+		<string name="method" value="woodcock"/>
+
+		<volume name="density" type="gridvolume">
+			<string name="filename" value="smoke.vol"/>
+			<transform name="toWorld">
+				<rotate z="1" angle="180"/>
+				<translate x="-0.6" y="0.6" z="0"/>
+			</transform>
+		</volume>
+		<float name="scale" value="200"/>
+
+		<volume name="albedo" type="constvolume">
+			<rgb name="value" value="0.5"/>
+		</volume>
+
+		<phase type="hg">
+			<float name="g" value="0.9"/>
+		</phase>
+	</medium>
+
+	<shape type="obj" id="smoke_bounding_box1">
+		<string name="filename" value="bounds.obj"/>
+		<transform name="toWorld">
+			<rotate z="1" angle="180"/>
+			<translate x="-0.6" y="0.6" z="0"/>
+		</transform>
+
+		<ref name="interior" id="smoke1"/>
+	</shape>
+	
+<!--	<medium type="heterogeneous" id="smoke2">
+		<string name="method" value="woodcock"/>
+
+		<volume name="density" type="gridvolume">
+			<string name="filename" value="smoke.vol"/>
+			<transform name="toWorld">
+				<rotate z="1" angle="180"/>
+				<translate x="-0.6" y="0.6" z="0"/>
+			</transform>
+		</volume>
+		<float name="scale" value="300"/>
+
+		<volume name="albedo" type="constvolume">
+			<rgb name="value" value="0.5"/>
+		</volume>
+
+		<phase type="hg">
+			<float name="g" value="0.9"/>
+		</phase>
+	</medium>
+
+	<shape type="obj" id="smoke_bounding_box2">
+		<string name="filename" value="bounds.obj"/>
+		<transform name="toWorld">
+			<translate x="-0.6" y="0.6" z="0"/>
+		</transform>
+
+		<ref name="interior" id="smoke2"/>
+	</shape> -->
+
+	<medium type="heterogeneous" id="smoke3">
+		<string name="method" value="woodcock"/>
+
+		<volume name="density" type="gridvolume">
+			<string name="filename" value="smoke.vol"/>
+			<transform name="toWorld">
+				<rotate z="1" angle="180"/>
+				<translate x="0.4" y="-0.4" z="0"/>
+			</transform>
+		</volume>
+		<float name="scale" value="10000"/>
+
+		<volume name="albedo" type="constvolume">
+			<rgb name="value" value="0.5"/>
+		</volume>
+
+		<phase type="hg">
+			<float name="g" value="0.9"/>
+		</phase>
+	</medium>
+
+	<shape type="obj" id="smoke_bounding_box3">
+		<string name="filename" value="bounds.obj"/>
+		<transform name="toWorld">
+			<rotate z="1" angle="180"/>
+			<translate x="0.4" y="-0.4" z="0"/>
+		</transform>
+
+		<ref name="interior" id="smoke3"/>
+	</shape>
+
+	<medium type="homogeneous" id="underwater">
+		<rgb name="sigmaS" value="0.4, 0.3, 0.3"/>
+		<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>
+
+		<phase type="hg">
+			<float name="g" value="0.9"/>
+		</phase>
+	</medium>
+
+	<shape type="obj" id="aquarium">
+		<string name="filename" value="bounds_large_wide.obj"/>
+		<transform name="toWorld">
+			<translate x="0" y="0" z="0"/>
+		</transform>
+
+		<ref name="interior" id="underwater"/>
+	</shape>
+
+<!-- 	<shape name="screen" type="obj">
+		<string name="filename" value="extraWideScreen.obj"/>
+
+		<bsdf type="diffuse">
+			<spectrum name="spectrumProperty" value="1" intent="illuminant"/>
+		</bsdf>
+
+		<emitter type="area">
+			<spectrum name="radiance" value="1"/>
+		</emitter>
+		<transform name="toWorld">
+			<translate z="2"/>
+		</transform>
+	</shape> -->
+
+	<sensor type="perspective">
+		<float name="focusDistance" value="9.13666"/>
+		<float name="fov" value="45.8402"/>
+		<string name="fovAxis" value="x"/>
+		<transform name="toWorld">
+
+			<lookat target="3.16856, 0.0162753, -6.55156" origin="3.55798, 0.0182755, -7.47262" up="-0.000778903, 0.999998, 0.00184228"/>
+		</transform>
+
+		<sampler type="ldsampler">
+			<integer name="sampleCount" value="64"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="height" value="200"/>
+			<integer name="width" value="200"/>
+
+			<rfilter type="gaussian"/>
+		</film>
+
+		<!--ref id="underwater"/-->
+	</sensor>
+</scene>

@@ -1,0 +1,65 @@
+2017-03-22 11:24:33 INFO  main [mitsuba.cpp:256] Mitsuba version 0.5.0 (Linux, 64 bit), Copyright (c) 2014 Wenzel Jakob
+2017-03-22 11:24:33 INFO  main [mitsuba.cpp:356] Parsing scene description from "hetvol.xml" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/volpath.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/gridvolume.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/constvolume.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/hg.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/heterogeneous.so" ..
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 31): Unqueried attribute "max" in element "medium"
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 31): Unqueried attribute "min" in element "medium"
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 52): Unqueried attribute "max" in element "medium"
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 52): Unqueried attribute "min" in element "medium"
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/homogeneous.so" ..
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 85): Unqueried attribute "max" in element "medium"
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 85): Unqueried attribute "min" in element "medium"
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/obj.so" ..
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] Loading geometry from "bounds_large_wide_int_diff.obj" ..
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] bounds_large_wide_int_diff: 24 triangles, 48 vertices (merged 24 vertices).
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] Loading OBJ materials from "bounds_large_wide_int_diff.mtl" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/diffuse.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/mask.so" ..
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] Done with "bounds_large_wide_int_diff.obj" (took 0 ms)
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 102): Unqueried attribute "spectrumProperty" in element "bsdf"
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/area.so" ..
+2017-03-22 11:24:33 WARN  main [scenehandler.cpp:795] In file "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.xml" (near line 107): Unqueried attribute "intensity" in element "emitter"
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] Loading geometry from "extraWideScreen.obj" ..
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] extraWideScreen: 2 triangles, 4 vertices (merged 2 vertices).
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] Loading OBJ materials from "extraWideScreen.mtl" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/phong.so" ..
+2017-03-22 11:24:33 INFO  main [WavefrontOBJ] Done with "extraWideScreen.obj" (took 0 ms)
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/ldsampler.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/gaussian.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/hdrfilm.so" ..
+2017-03-22 11:24:33 INFO  main [PluginManager] Loading plugin "plugins/perspective.so" ..
+2017-03-22 11:24:33 INFO  ren0 [KDTreeBase] Constructing a SAH kd-tree (26 primitives) ..
+2017-03-22 11:24:33 INFO  ren0 [KDTreeBase] Finished -- took 0 ms.
+2017-03-22 11:24:33 INFO  ren0 [SamplingIntegrator] Starting render job (400x400, 64 samples, 40 cores, SSE2 enabled) ..
+2017-03-22 11:24:43 INFO  ren0 [RenderJob] Render time: 9.9170s
+2017-03-22 11:24:43 INFO  ren0 [HDRFilm] Writing image to "/home/addalin/mitsuba_sim/3D_models/hetvol/mitsuba/hetvol.exr" ..
+2017-03-22 11:24:43 INFO  main [statistics.cpp:142] Statistics:
+------------------------------------------------------------
+ * Loaded plugins :
+    -  plugins/area.so [Area light]
+    -  plugins/constvolume.so [Constant data source]
+    -  plugins/diffuse.so [Smooth diffuse BRDF]
+    -  plugins/gaussian.so [Gaussian reconstruction filter]
+    -  plugins/gridvolume.so [Grid data source]
+    -  plugins/hdrfilm.so [High dynamic range film]
+    -  plugins/heterogeneous.so [Heterogeneous medium]
+    -  plugins/hg.so [Henyey-Greenstein phase function]
+    -  plugins/homogeneous.so [Homogeneous medium]
+    -  plugins/ldsampler.so [Low discrepancy sampler]
+    -  plugins/mask.so [Mask BSDF]
+    -  plugins/obj.so [OBJ triangle mesh loader]
+    -  plugins/perspective.so [Perspective camera]
+    -  plugins/phong.so [Modified Phong BRDF]
+    -  plugins/volpath.so [Volumetric path tracer]
+
+  * General :
+    -  Detected medium inconsistencies : 177
+    -  Normal rays traced : 89.687 M
+    -  Shadow rays traced : 46.697 M
+
+  * Volumetric path tracer :
+    -  Average path length : 5.90 (60.39 M / 10.24 M)
+------------------------------------------------------------
