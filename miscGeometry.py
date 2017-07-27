@@ -62,6 +62,12 @@ def rotZ(theta):
     return np.array([[np.cos(theta), -np.sin(theta), 0 ], 
                      [np.sin(theta), np.cos(theta) , 0 ],
                      [0 ,        0     ,     1         ]])
+def rotY(theta):
+    '''Return rotation matrix arount y axis with angle size of theta [degrees]'''
+    theta = np.deg2rad(theta)
+    return np.array([[np.cos(theta)   ,  0 , np.sin(theta) ], 
+                     [0               ,  1 ,            0  ],
+                     [-np.sin(theta)  ,  0 , np.cos(theta)]])
 
 def setCamToWorldVec ( camsPos , upDirection, target):
     '''Retreives toWorld transform vectors for each camera in camsPos [origin = (self position) , target = (0,0,0), up direction = (0,0,1)] '''
@@ -70,13 +76,20 @@ def setCamToWorldVec ( camsPos , upDirection, target):
     
     return cams    
 
-def createCamsCirc(numViews , radius , camHeight , upDirection , target, archAngleSize = 360, horizon = np.array([0, 1, 0])):
+def createCamsCirc(numViews , sceneParams):
+
     '''This function creates an arch or circle path of camera's positionsm, such that:
        center of path is at (0,0,0), with raduis size. each of numViews cameras are perpendicular to XY plane at z = camHeight
        size of arch angle is defined by archAngleSize, and it's center is looking towords the horizon'''
+    radius = sceneParams['camsRadius']
+    camHeight = sceneParams['camsHeight']
+    upDirection = sceneParams['upDirection']
+    target = sceneParams['boundsTranslation']
+    horizon = sceneParams['horizon']
+    archAngleSize = sceneParams['archAngleSize']
     
     archRatio = np.float(archAngleSize) / 360
-    theta   = np.linspace( 0 , archRatio * 360, numViews )
+    theta   = np.linspace( archRatio * 360 ,0 , numViews )
     axisX = np.array([1, 0, 0])
     lookingAngle = calcAngleVectors(horizon,axisX )
     

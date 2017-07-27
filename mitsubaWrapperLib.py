@@ -48,14 +48,15 @@ class Mitsuba(object):
                 ## Setting & adding emmiters to scene - diffusive screen, created out of multiple sub-screens
                 self.SetWideScreen()
                 # mitsuba.SetSunSky(np.array([[3, 300,3, 0,0,0, 0,0,1]]))
-                # TODO : fix overriding of : self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
+                # TODO : fix overidin of : self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
                 self.addSceneLights()
                 
                 ## Simultaneously rendering multiple versions of a scene
                 self.scene.initialize()
                 self.scheduler = Scheduler.getInstance()
                 ## Start up the scheduling system with one worker per local core
-                for i in range(0, multiprocessing.cpu_count()):
+                maxThreads = min(multiprocessing.cpu_count(),16)
+                for i in range(0, maxThreads):
                         self.scheduler.registerWorker(LocalWorker(i, 'wrk%i' % i))
                 self.scheduler.start()
                 
@@ -102,7 +103,7 @@ class Mitsuba(object):
                     },
                     'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(dx/2, dy/2, 1)),
                     'emitter': {
-                            'type': 'area',#,'constant',#'area',
+                            'type': 'constant',#'area',#,'constant',#'area',
                             'radiance':Spectrum(radiance),
                             'samplingWeight':10.0                            
                     }
@@ -132,7 +133,17 @@ class Mitsuba(object):
                 for x in screenX:
                         for y in screenY:
                                 curRadiance = np.random.uniform(0.0, maxRadiance) if rand else maxRadiance
-                                self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)      
+                                self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)
+        #def SetWideScreen(self):
+                #"""Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
+                #The radiance [Watt/(m^2*sr)] of screeen can be either constant [1] of variant unifomily [0,1] """
+                #width = self.params['screenWidth']
+                #height = self.params['screenHeight']
+                #resX = self.params['resXScreen']
+                #resY = self.params['resYScreen']
+                #screenZPos = self.params['screenZPos']
+                #rand = self.params['variantRadiance']                
+                #self.SetWideScreen() = SetWideScreen(width  , height , resX , resY, screenZPos, rand )        
 
         # ----------------------SET CAMERA -----------------------
         def SetCamera(self,dir_vec):
@@ -145,7 +156,7 @@ class Mitsuba(object):
                         Point( dir_vec[0,3] , dir_vec[0,4] , dir_vec[0,5]),
                         Vector(dir_vec[0,6] , dir_vec[0,7] , dir_vec[0,8])
                     ),
-                    #'focalLength': self.params['focalLength'], # focalLength - is rellevant to equivelent 35[mm] film, alternative definition is set by:'fov' & 'fovAxis' 
+                    #'focalLength': self.params['focalLength'], # focalLength can be achived by 'fov' & 'fovAxis' 
                     'fov': self.params['fov'],
                     'fovAxis': self.params['fovAxis'],
                     #'farClip':100.0,
@@ -159,11 +170,11 @@ class Mitsuba(object):
                                'sampleCount' : self.params['sampleCount'],
                                'dimension': self.params['samplerDimention']
                     },
-                   'medium' : {
+                   'medium' : { # commented out only for debugging - 
                                 'type' : 'homogeneous',
                                 'id': 'underwater',
-                                #'scale': 0.5, 
-                                'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
+                                #'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
+                                'sigmaS' : Spectrum([0.0, 0.0, 0.0]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
                                 'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
                                 'phase' : {
                                         'type' : 'hg',
@@ -207,9 +218,10 @@ class Mitsuba(object):
                 currScene.setDestinationFile('')
                 
                 ## Create a render job and insert it into the queue
+                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue )
                 curSceneResID = self.scheduler.registerResource(currScene)
-                job = RenderJob('myRenderJob'+str(i), currScene, self.queue,curSceneResID ) # passing curSceneResID/self.sceneResID - in order to create shallow copy of the scene to all warkers
-                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue )                
+                job = RenderJob('myRenderJob'+str(i), currScene, self.queue,curSceneResID )
+                #job = RenderJob('myRenderJob'+str(i), currScene, self.queue,self.sceneResID )  # passing self.sceneResID - in order to create shallow copy of the scene to all warkers
                 job.start()
                 
                 self.queue.waitLeft(0)
