@@ -1,0 +1,73 @@
+simulation: # Simulation mode
+    show_scene: false
+    show_results: true
+    single_view: false
+    increase_samples: false
+    save_results: true
+    theme_type: cloud
+    nRuns: 1
+    nViews: 1
+cams: # Cameras parameteres 
+    IMX264 :
+        sensorName: IMX264
+        cameraName: Manta G-507C
+        nWidth: 1936
+        nHeight: 1458
+        fov :  28.0725 
+        fovAxis : x
+        wellDepth: 10361.0
+        readNoise: 2.0
+        bitDepth: 12
+        du: 3.45e-6 
+        dv: 3.45e-6 
+    IMX174 :
+        sensorName: IMX174
+        cameraName: Manta G-235C
+        nWidth: 1936
+        nHeight: 1216
+        fov :  28.0725 
+        fovAxis : x
+        wellDepth: 33000.0
+        readNoise: 6.0
+        bitDepth: 12
+        du: 5.86e-6 
+        dv: 5.86e-6 
+    IMX265 :
+        sensorName: IMX265
+        cameraName: Manta G-319C
+        nWidth: 2064
+        nHeight: 1544
+        fov :  28.0725
+        fovAxis : x
+        wellDepth: 10632.0
+        readNoise: 2.0
+        bitDepth: 12
+        du: 3.45e-6 
+        dv: 3.45e-6 
+    test1 :
+        sensorName: test1
+        cameraName: camera-test1
+        nWidth: 400
+        nHeight: 400
+        fov :  28.0725
+        fovAxis : x
+        wellDepth: 10632.0
+        readNoise: 2.0
+        bitDepth: 12
+        du: 3.45e-6 
+        dv: 3.45e-6 
+screen: # Screen parameteres
+    variantRadiance: false
+    screenWidth: 50.0
+    screenHeight: 20.0
+    resXScreen: 200
+    resYScreen: 500
+    screenZPos: 2.0
+    maxRadiance: 1.2    
+scene: # Scene parameteres  
+    camsRadius: 3.0
+    camsHeight: 0.0
+    upDirection: [0.0,0.0,1.0]
+    horizon: [0.0, 1.0, 0.0]
+    boundsTranslation: [0.0, 1.0, 0.0]  # target
+    screenTranslation: [0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
