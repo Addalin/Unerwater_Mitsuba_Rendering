@@ -1,6 +1,7 @@
 import os, sys
 import numpy as np
 import scipy.io
+import yaml
 
 import mitsubaWrapperLib as mitLib
 import miscGeometry as mgo
@@ -9,60 +10,46 @@ import matplotlib.pyplot as plt
 from time import gmtime, strftime
 import timeit
 
-def setSimParams (simMode):
-    """Set simulation parameters"""
+def conv2nparray(dict_in):
+    """converting elements in dictionary from list to np.array"""
+    for key in dict_in:
+        if type(dict_in[key]) is list:
+            dict_in[key] = np.array(dict_in[key])
+    return dict_in
         
-    camsParam = {}
-    camsParam['sampleCount'] = 128 #128 # Samlpes per pixel
+def setSimParams (fileName='', sensorName=''):
+    """Set simulation parameters"""
+    with open(fileName,'r') as ymlfile:
+            sim_cfg = yaml.load(ymlfile)
+            
+    ## SET SIMULATION MODE  
+    simMode = sim_cfg['simulation']   
+
+        
+    ## SET CAMERA'S PARAMETERS   
+    if sensorName:
+        camsParam = sim_cfg['cams'][sensorName]
+    else:
+        camsParam = sim_cfg['cams']['test1']
     camsParam['samplerDimention'] = 1024
-    camsParam['nWidth']    = 100#1936 # 2464 # 1936 #400#1936 # 2464 # 800  # 400 # Image width
-    camsParam['nHeight']   = 100#1458 # 2056 # 1458 # 2056 # 800  # 400 # Image hight
-    #camsParam['focalLength'] =  '12'  # focalLength in [mm]
-    camsParam['fov'] = 39.008129097 #28.0725 #39.008129097 # [derees]
-    camsParam['fovAxis'] = 'x'
-    camsParam['sensorName'] =  'IMX264'#'ICX674' #'IMX264' #
-    
-    #other parameteres just for results savings
-    camsParam['wellDepth'] = 10361.0 # 15770.0  #[electrons]
-    camsParam['readNoise'] = 2.0 # 10.0 #[electrons]
-    camsParam['bitDepth'] = 12
-    camsParam['du'] = 3.45*(10**-6) # 4.54*(10**-6) #[m]
-    camsParam['dv'] = 3.45*(10**-6) # 4.54*(10**-6) #[m]
+    camsParam['sampleCount'] = 128
     camsParam['width'] = camsParam['nWidth']*camsParam['du']
     camsParam['height'] = camsParam['nHeight']*camsParam['dv']
+            
     
+    ## SET SCREEN PARAMETERS
+    screenParams = sim_cfg['screen'] 
     
-    ## SET screen parameteres
-    screenParams = {}
-    screenParams['variantRadiance'] = False
-    screenParams['screenWidth'] = 50.0
-    screenParams['screenHeight'] = 20.0
-    screenParams['resXScreen'] = 200
-    screenParams['resYScreen'] = 500 
-    screenParams['screenZPos'] = 2.0
-    screenParams['maxRadiance'] = 1.2
-    
-    
-    
-    ## SET common camera's parameteres
-    sceneParams = {}  
-    sceneParams['camsRadius'] = 3
-    sceneParams['camsHeight'] = 0
-    sceneParams['upDirection'] = np.array([0.0,0.0,1.0])
-    sceneParams['horizon'] = np.array([0.0, 1.0, 0.0])
-    sceneParams['boundsTranslation'] = np.array([0.0, 0.0, 0.0])  # target
-    sceneParams['screenTranslation'] = np.array([0, 2, 0])  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
-    
-    ## SET runing scenarios 
+    ## SET CAMERAS SPACIAL SCENE PARAMETERS
+    sceneParams = sim_cfg['scene']
     if simMode['single_view'] :
         sceneParams['nRunOp'] = np.array([simMode['nRuns']])
         sceneParams['archAngleSize'] = 0
     else:
         sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
-        sceneParams['archAngleSize'] = 125              
-
-    
-    return camsParam, screenParams, sceneParams
+        sceneParams['archAngleSize'] = 125 
+        
+    return camsParam, screenParams, sceneParams, simMode
 
 def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams):
     
@@ -186,21 +173,15 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
 if __name__=='__main__':
     
     print 'main_mitsuba_sim.py'
+      
+    ## SET SIMULATION PARAMETERS & MITSUBA PATH 
+    mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
+    cfgFile = mitsuba_sim_path + '/sim_config.yml'
+    sensorName = 'test1'#'IMX264'
     
-    ## SET SIMULATION MODE
-    theme = ['background','cloud','cubic','empty_cubic','cubic_water','bg_water','bg_vacuum',
-             'cubic_vacuum','bg_sigmaA','cloud_sigmaA','cloud_vacuum','cloud_water','bg_water_green','smoke_test_time']
-    themeType = 13  
-    nRuns = 1  # number of runing times per scenario
-    nViews = 1 # numViews - varaing cameras positions 
-    simMode = {'show_scene':False,'show_results':True ,'single_view':False,
-               'increase_samples': False, 'save_results':True,
-               'theme_type':theme[themeType],'nRuns':nRuns,'nViews':nViews}  
-    
-    ## SET MITSUBA PATH & SIMULATION PARAMETERS
-    scene_base_path = os.environ['MITSUBA_SIM'].replace('\\', '/') + '/3D_models' 
+    camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
+    scene_base_path = mitsuba_sim_path + '/3D_models' 
     scene_name = 'hetvol'
-    camsParam, screenParams, sceneParams = setSimParams (simMode)
     
     ## RUN SIMULATION:
     runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams)    
