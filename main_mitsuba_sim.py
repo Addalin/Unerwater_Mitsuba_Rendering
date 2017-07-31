@@ -177,7 +177,7 @@ if __name__=='__main__':
     ## SET SIMULATION PARAMETERS & MITSUBA PATH 
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'test1'#'IMX264'
+    sensorName = 'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
