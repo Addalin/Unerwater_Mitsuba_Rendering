@@ -16,8 +16,8 @@ import timeit
 params = {}
 params['sampleCount'] = 128 #128 # Samlpes per pixel
 params['samplerDimention'] = 1024
-params['nWidth']    = 2464#1936 # 2464 # 1936 #400#1936 # 2464 # 800  # 400 # Image width
-params['nHeight']   = 2056#1458 # 2056 # 1458 # 2056 # 800  # 400 # Image hight
+params['nWidth']    = 1936 # 2464 # 1936 #400#1936 # 2464 # 800  # 400 # Image width
+params['nHeight']   = 1458 # 2056 # 1458 # 2056 # 800  # 400 # Image hight
 #params['focalLength'] =  '12'  # focalLength in [mm]
 params['fov'] = 39.008129097 #28.0725 #39.008129097 # [derees]
 params['fovAxis'] = 'x'

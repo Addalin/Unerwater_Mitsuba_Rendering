@@ -55,7 +55,7 @@ class Mitsuba(object):
                 self.scene.initialize()
                 self.scheduler = Scheduler.getInstance()
                 ## Start up the scheduling system with one worker per local core
-                maxThreads = min(multiprocessing.cpu_count(),16)
+                maxThreads = min(multiprocessing.cpu_count(),40)
                 for i in range(0, maxThreads):
                         self.scheduler.registerWorker(LocalWorker(i, 'wrk%i' % i))
                 self.scheduler.start()
