@@ -1,10 +1,10 @@
 simulation: # Simulation mode
     show_scene: false
-    show_results: true
+    show_results: false
     single_view: false
     increase_samples: false
     save_results: true
-    theme_type: cloud
+    theme_type: bg
     nRuns: 1
     nViews: 1
 cams: # Cameras parameteres 
@@ -71,3 +71,10 @@ scene: # Scene parameteres
     horizon: [0.0, 1.0, 0.0]
     boundsTranslation: [0.0, 1.0, 0.0]  # target
     screenTranslation: [0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
+    betaScale:
+        bg: 1
+        cloud: 3.33
+    albedo:
+        bg: water 0.0
+        cloud: 0.0
+        
