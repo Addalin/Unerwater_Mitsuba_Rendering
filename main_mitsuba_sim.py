@@ -2,6 +2,7 @@ import os, sys
 import numpy as np
 import scipy.io
 import yaml
+import pandas as pd 
 
 import mitsubaWrapperLib as mitLib
 import miscGeometry as mgo
@@ -132,8 +133,10 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     """
     Saving images and other parameters of current run
     """
+    # Set paths and names
     mitsuba_results_path = os.environ['MITSUBA_RESULTS'].replace('\\', '/')
-    resolution_folder = 'resolution '+ str(camsParam['nWidth']) +' X '+str(camsParam['nHeight'])   
+    resolution_str = str(camsParam['nWidth']) +' X '+str(camsParam['nHeight'])
+    resolution_folder = 'resolution '+ resolution_str   
     resolution_folder_path = mitsuba_results_path + '/' + resolution_folder
         
     if simMode['single_view'] :
@@ -150,24 +153,56 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     cams_file_name = base_file_name + '_pyCams.mat'
     imgs_file_name = base_file_name + '_pyImages.mat'
 
+    
+    # Create a new results folder
     if not(os.path.isdir(resultsPath)):
         if not(os.path.isdir(resolution_folder_path)):
             os.mkdir(resolution_folder_path)
-        os.mkdir(resultsPath)   
+        os.mkdir(resultsPath)
+        append_new_log_line = True
+    else:
+        append_new_log_line = False
 
+    # save results in mat files
     scipy.io.savemat(cams_file_name, mdict={'camsLookAtVectors': cams , 'camsParam': camsParam,
                                             'sceneMitsubaParams': sceneParams,'simMode':simMode,'startTime':startTime,'runTime':runTime})
     scipy.io.savemat(imgs_file_name, {'renderedImagesMitsuba':simIm})
     #scipy.io.savemat(resultsPath + "/" + save_file_name +'_pySceneInfo.mat', mdict = {'scene_info':sceneInfo})
 
     print 'Results are saved at:\n', resultsPath
-
+    
+    # Add a new line to log file (once creating a new resultsPath)
+    if append_new_log_line:
+        log_res_new = {'resolution':resolution_str,       
+                   'nViews':simMode['nViews'],           
+                   'camera_radius':sceneParams['camsRadius'],  
+                   'scene':simMode['theme_type'],            
+                   'beta_scale':sceneParams['betaScale'][simMode['theme_type']],       
+                   'albedo_bg':sceneParams['albedo']['bg'],        
+                   'albedo_theme':sceneParams['albedo']['cloud'],     
+                   'matrixA': '',          
+                   'res_dir':'',          
+                   'recovery_dir':'',     
+                   'SparseA_dir':resultsPath,      
+                   'comments':''
+                   }
+        csvlog_file_name = mitsuba_sim_path + 'results_log.csv'
+        log_res_df = pd.read_csv(csvlog_file_name,sep=',',index_col=False)
+        log_res_df.fillna(value='',inplace=True)
+        log_res_df = log_res_df.append(pd.Series(log_res_new), ignore_index=True)
+        log_res_df = log_res_df.sort_values(by=['camera_radius','resolution','nViews','scene'])
+        log_res_df.to_csv(csvlog_file_name, sep=",", na_rep='',index=False)
+    
     # Load files to s3 -  Amazon bucket
     if (os.environ['SYS_NAME']=='AWS') :
         print 'Coping results to aws bucket @ s3://addaline-data/'
         dist_resultsPath = resolution_folder + '/' + scenario_path
         cmd = 'aws s3 sync "'+ resultsPath + '" s3://addaline-data/"' + dist_resultsPath +'"'     
-        os.system(cmd)                
+        os.system(cmd)
+        
+        if append_new_log_line:
+            cmd = 'aws s3 sync '+ csvlog_file_name + ' s3://addaline-data/' + 'results_log.csv'      
+            os.system(cmd)
 
 
 if __name__=='__main__':
@@ -175,9 +210,10 @@ if __name__=='__main__':
     print 'main_mitsuba_sim.py'
       
     ## SET SIMULATION PARAMETERS & MITSUBA PATH 
+    global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'IMX264'#'test1'#'IMX264'
+    sensorName = 'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
