@@ -1,0 +1,3 @@
+resolution,nViews,camera_radius,scene,beta_scale,albedo_bg,albedo_theme,matrixA,res_dir,recovery_dir,SparseA_dir,comments
+1936 X 1458,4,3,bg,0,water,water,,/resolution 1936 X 1458/background_multiple 4 views_4 runs_26-04-2017_19-24-32_3m_radius/,,,
+1936 X 1458,4,3,cloud,3.33,water,cloud = 0.5,old,/resolution 1936 X 1458/cloud_multiple 4 views_2 runs_09-05-2017_05-33-32/,/home/addalin/matlab simulation/resolution 1936X1458/Tomography_results_4_views_1936X1458_pixels_10-05-2017_15-12-36.mat,TRUE,
