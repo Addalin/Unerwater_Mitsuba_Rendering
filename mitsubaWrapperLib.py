@@ -238,3 +238,7 @@ class Mitsuba(object):
                 # TODO : update Mitsuba version of Windows, with the updated API - bitmap.getNativeBuffer() doesn't exsists animore                        
                 currSceneInfo = currScene.getAABB
                 return result_image, currSceneInfo
+        
+        def shutDownMitsuba(self):
+                self.queue.join()
+                self.scheduler.stop()

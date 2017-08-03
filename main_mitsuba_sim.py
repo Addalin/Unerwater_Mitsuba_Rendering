@@ -108,7 +108,8 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
             print ' Results were not saves'
                         
     print strftime("%d-%m-%Y_%H-%M-%S", gmtime()) + ' Mituba simulation has finished succesfully'
-        
+    mitsuba.shutDownMitsuba()   
+    
 def showResults(simIm,numIms):
     """Plot rendered images of single run"""
     for indIm, im in enumerate(simIm):
@@ -196,13 +197,15 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     # Load files to s3 -  Amazon bucket
     if (os.environ['SYS_NAME']=='AWS') :
         print 'Coping results to aws bucket @ s3://addaline-data/'
-        dist_resultsPath = resolution_folder + '/' + scenario_path
-        cmd = 'aws s3 sync "'+ resultsPath + '" s3://addaline-data/"' + dist_resultsPath +'"'     
+        s3_sim_results = 'mitsuba_sim_results/'+resolution_folder+'/'
+        #dist_resultsPath = resolution_folder + '/' + scenario_path
+        cmd = 'aws s3 sync "' + resultsPath + '" s3://addaline-data/"' + s3_sim_results + scenario_path +'"'     
         os.system(cmd)
         
         if append_new_log_line:
-            cmd = 'aws s3 sync '+ csvlog_file_name + ' "s3://addaline-data/' +resolution_folder+ '/results_log.csv"'        
+            cmd = 'aws s3 sync ' + mitsuba_sim_path + ' "s3://addaline-data/' + s3_sim_results + '" --exclude="*" --include="results_log.csv" --include="output_log.txt"'        
             os.system(cmd)
+
 
 
 if __name__=='__main__':
