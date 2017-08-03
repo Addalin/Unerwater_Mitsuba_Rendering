@@ -181,9 +181,9 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
                    'albedo_bg':sceneParams['albedo']['bg'],        
                    'albedo_theme':sceneParams['albedo']['cloud'],     
                    'matrixA': '',          
-                   'res_dir':'',          
+                   'res_dir':resultsPath,          
                    'recovery_dir':'',     
-                   'SparseA_dir':resultsPath,      
+                   'SparseA_dir':'',      
                    'comments':''
                    }
         csvlog_file_name = mitsuba_sim_path + 'results_log.csv'
@@ -201,7 +201,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
         os.system(cmd)
         
         if append_new_log_line:
-            cmd = 'aws s3 sync '+ csvlog_file_name + ' s3://addaline-data/' +resolution_folder+ '/results_log.csv'      
+            cmd = 'aws s3 sync '+ csvlog_file_name + ' "s3://addaline-data/' +resolution_folder+ '/results_log.csv"'        
             os.system(cmd)
 
 
