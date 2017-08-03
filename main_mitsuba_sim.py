@@ -201,7 +201,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
         os.system(cmd)
         
         if append_new_log_line:
-            cmd = 'aws s3 sync '+ csvlog_file_name + ' s3://addaline-data/' + 'results_log.csv'      
+            cmd = 'aws s3 sync '+ csvlog_file_name + ' s3://addaline-data/' +resolution_folder+ '/results_log.csv'      
             os.system(cmd)
 
 
@@ -220,4 +220,11 @@ if __name__=='__main__':
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams)    
+    for nViews in [4,5,6,7,8] :
+        print 'Start simulation for nViews = ' + str(nViews)
+        simMode['nViews'] = nViews
+        tic=timeit.default_timer()
+        runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams)
+        toc=timeit.default_timer()
+        print 'Finished simulation for nViews = ' + str(nViews)
+        print 'elapsed time ' + str(toc - tic) + ' sec' #elapsed time in seconds
