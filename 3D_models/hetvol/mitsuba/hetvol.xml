@@ -13,13 +13,13 @@
 		<string name="method" value="woodcock"/>
 
 		<volume name="density" type="gridvolume">
-			<string name="filename" value="smoke.vol"/>
+			<string name="filename" value="cloud_water_green.vol"/>
 			<!--string name="filename" value="cubic_water_green.vol"/-->
 			<!--<transform name="toWorld">
 				<rotate z="1" angle="180"/>
 			</transform>-->
 		</volume>
-		<float name="scale" value="3.33"/>
+		<float name="scale" value="1"/>
     <!--float name="scale" value="0.36"/-->
 		
     <volume name="albedo" type="constvolume">
