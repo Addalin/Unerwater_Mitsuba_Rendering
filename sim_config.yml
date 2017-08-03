@@ -4,8 +4,8 @@ simulation: # Simulation mode
     single_view: false
     increase_samples: false
     save_results: true
-    theme_type: bg
-    nRuns: 1
+    theme_type: cloud #bg
+    nRuns: 2
     nViews: 1
 cams: # Cameras parameteres 
     IMX264 :
@@ -47,8 +47,8 @@ cams: # Cameras parameteres
     test1 :
         sensorName: test1
         cameraName: camera-test1
-        nWidth: 400
-        nHeight: 400
+        nWidth: 10
+        nHeight: 10
         fov :  28.0725
         fovAxis : x
         wellDepth: 10632.0
