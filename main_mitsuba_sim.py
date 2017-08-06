@@ -18,6 +18,16 @@ def conv2nparray(dict_in):
             dict_in[key] = np.array(dict_in[key])
     return dict_in
         
+def configNViews(simMode,sceneParams):
+    
+    if simMode['single_view'] :
+        sceneParams['nRunOp'] = np.array([simMode['nRuns']])
+        sceneParams['archAngleSize'] = 0
+    else:
+        sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
+        sceneParams['archAngleSize'] = 125
+    return sceneParams
+
 def setSimParams (fileName='', sensorName=''):
     """Set simulation parameters"""
     with open(fileName,'r') as ymlfile:
@@ -43,12 +53,14 @@ def setSimParams (fileName='', sensorName=''):
     
     ## SET CAMERAS SPACIAL SCENE PARAMETERS
     sceneParams = sim_cfg['scene']
-    if simMode['single_view'] :
-        sceneParams['nRunOp'] = np.array([simMode['nRuns']])
-        sceneParams['archAngleSize'] = 0
-    else:
-        sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
-        sceneParams['archAngleSize'] = 125 
+    sceneParams = configNViews(simMode,sceneParams)
+    
+    #if simMode['single_view'] :
+        #sceneParams['nRunOp'] = np.array([simMode['nRuns']])
+        #sceneParams['archAngleSize'] = 0
+    #else:
+        #sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
+        #sceneParams['archAngleSize'] = 125 
         
     return camsParam, screenParams, sceneParams, simMode
 
@@ -216,16 +228,18 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'IMX174'#'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [4,5,6] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [1] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
+        # update nViews 
+        sceneParams = configNViews(simMode,sceneParams)
         tic=timeit.default_timer()
         runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams)
         toc=timeit.default_timer()
