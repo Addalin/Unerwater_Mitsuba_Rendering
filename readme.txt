@@ -22,13 +22,14 @@ cd $MITSUBA_SIM
 2. update: sim_config.yml : scene : bg / cloud , nRuns : 2 
 3. update: hetvol.xml : cloud_water_green.vol / cubic_water_green.vol
 4. update: sensorName in main_mitsuba_sim.py
+5. update: maxThreads in mitsubaWrapperLib.py - according to cores availability
 ---------------------------------------------------------------
 
 mkdir mitsuba_sim_results
 pico sim_config.yml
 pico 3D_models/hetvol/mitsuba/hetvol.xml
 pico main_mitsuba_sim.py
-
+pico mitsubaWrapperLib.py
 
 ---------------------------------------------------------------
 #                     run simulation                          #
