@@ -11,11 +11,11 @@ cams: # Cameras parameteres
     IMX264 :
         sensorName: IMX264
         cameraName: Manta G-507C
-        nWidth: 1936
-        nHeight: 1458
+        nWidth: 2464
+        nHeight: 2056
         fov :  28.0725 
         fovAxis : x
-        wellDepth: 10361.0
+        wellDepth: 10613.0
         readNoise: 2.0
         bitDepth: 12
         du: 3.45e-6 
