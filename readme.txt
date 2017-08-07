@@ -23,7 +23,8 @@ cd $MITSUBA_SIM
 3. update: hetvol.xml : cloud_water_green.vol / cubic_water_green.vol
 4. update: sensorName in main_mitsuba_sim.py
 5. update: maxThreads in mitsubaWrapperLib.py - according to cores availability
-5. update: results_log.csv
+6. update: results_log.csv
+
 ---------------------------------------------------------------
 
 mkdir mitsuba_sim_results
