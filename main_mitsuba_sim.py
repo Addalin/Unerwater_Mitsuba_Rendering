@@ -215,7 +215,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
         os.system(cmd)
         
         if append_new_log_line:
-            cmd = 'aws s3 sync ' + mitsuba_sim_path + ' "s3://addaline-data/' + s3_sim_results + '" --exclude="*" --include="results_log.csv" --include="output_log.txt"'        
+            cmd = 'aws s3 sync ' + mitsuba_sim_path + ' "s3://addaline-data/' + s3_sim_results + '" --exclude="*" --include="results_log.csv" --include="output*.txt"'        
             os.system(cmd)
 
 
@@ -228,14 +228,14 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'IMX174'#'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'IMX264'#'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [1] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [6,7,8] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
         # update nViews 
