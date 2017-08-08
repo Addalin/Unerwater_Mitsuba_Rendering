@@ -1,11 +1,11 @@
 simulation: # Simulation mode
     show_scene: false
-    show_results: false
+    show_results: true
     single_view: false
     increase_samples: false
     save_results: true
     theme_type: cloud #bg
-    nRuns: 2
+    nRuns: 1
     nViews: 1
 cams: # Cameras parameteres 
     IMX264 :
@@ -24,8 +24,8 @@ cams: # Cameras parameteres
         sensorName: IMX174
         cameraName: Manta G-235C
         nWidth: 1936
-        nHeight: 1216
-        fov :  28.0725 
+        nHeight: 1216 
+        fov : 28.0725 
         fovAxis : x
         wellDepth: 33000.0
         readNoise: 6.0
@@ -69,7 +69,7 @@ scene: # Scene parameteres
     camsHeight: 0.0
     upDirection: [0.0,0.0,1.0]
     horizon: [0.0, 1.0, 0.0]
-    boundsTranslation: [0.0, 1.0, 0.0]  # target
+    boundsTranslation: [0.0, 0.0, 0.0]  # target
     screenTranslation: [0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
     betaScale:
         bg: 1
@@ -77,4 +77,3 @@ scene: # Scene parameteres
     albedo:
         bg: water 0.0
         cloud: 0.0
-        
