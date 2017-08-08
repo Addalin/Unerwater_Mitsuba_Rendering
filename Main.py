@@ -14,14 +14,14 @@ import timeit
 ## SET PARAMETERS:
 
 params = {}
-params['sampleCount'] = 128 #128 # Samlpes per pixel
+params['sampleCount'] = 16 #128 # Samlpes per pixel
 params['samplerDimention'] = 1024
-params['nWidth']    = 1936 # 2464 # 1936 #400#1936 # 2464 # 800  # 400 # Image width
-params['nHeight']   = 1458 # 2056 # 1458 # 2056 # 800  # 400 # Image hight
+params['nWidth']    = 2064 #1936 # 2464 # 1936 #400#1936 # 2464 # 800  # 400 # Image width
+params['nHeight']   = 1544#1458 # 2056 # 1458 # 2056 # 800  # 400 # Image hight
 #params['focalLength'] =  '12'  # focalLength in [mm]
 params['fov'] = 39.008129097 #28.0725 #39.008129097 # [derees]
 params['fovAxis'] = 'x'
-params['sensorName'] =  'IMX264'#'ICX674' #'IMX264' #
+params['sensorName'] =  'IMX174'#'ICX674' #'IMX264' #
 
 #other parameteres just for results savings
 params['wellDepth'] = 10361.0 # 15770.0  #[electrons]
@@ -34,7 +34,7 @@ params['height'] = params['nHeight']*params['dv']
 
 ## Set simulation MODES parameteres
 show_scene = False
-show_results = False 
+show_results = True 
 single_view = False
 increase_samples = False
 save_results = True
@@ -59,14 +59,22 @@ camsHeight = 0
 upDirection = np.array([0.0,0.0,1.0])
 horizon = np.array([0.0, 1.0, 0.0])
 boundsTranslation = np.array([0.0, 0.0, 0.0])  # target
+archAngleSize = 125
+sceneParams={}
+sceneParams['camsRadius'] = camsRadius
+sceneParams['camsHeight'] = camsHeight
+sceneParams['upDirection'] = upDirection
+sceneParams['boundsTranslation'] = boundsTranslation
+sceneParams['horizon'] = horizon
+sceneParams['archAngleSize'] = archAngleSize
 
 ## SET runing scenarios 
-nRuns = 2 #64 #np.ceil(params['wellDepth']/params['sampleCount']).astype(int) # nRuns -  number of runing times for scenario
+nRuns = 1#64 #np.ceil(params['wellDepth']/params['sampleCount']).astype(int) # nRuns -  number of runing times for scenario
 if single_view:
     nRunOp = np.array([nRuns])
     scenario_path = theme[themeType] + '_single view_' + str(nRuns) +' runs'
 else:
-    numViews = 6 # numViews - varaing cameras positions   
+    numViews = 8 # numViews - varaing cameras positions   
     nRunOp = np.ones(nRuns,dtype=int)*numViews
     scenario_path = theme[themeType] + '_multiple ' + str(numViews) + ' views_'+str(nRuns) + ' runs'        
     # nRunOp - array size of nRuns, each cell value is numViews; This is for running the scene witn numViews camers X nRuns times     
@@ -88,7 +96,7 @@ if show_scene:
     boundsPLYPath = scene_base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
     screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply'
 
-## RUN MITSUBA & ADD lights and screen
+## RUN MITSUBA & ADD lights and screencamsRadius , camsHeight , upDirection , boundsTranslation , archAngleSize , horizon
 mitsuba = mitLib.Mitsuba(scene_base_path,scene_name,params,screenParams)
 
 for runNo,numIms in enumerate(nRunOp):
@@ -101,7 +109,7 @@ for runNo,numIms in enumerate(nRunOp):
         mitCam = mgo.rotScene2Mitsuba(cams[0][None,:])         
     else:
         archAngleSize = 125
-        cams = mgo.createCamsCirc(numIms , camsRadius , camsHeight , upDirection , boundsTranslation , archAngleSize , horizon)
+        cams = mgo.createCamsCirc(numIms , sceneParams)
     
     # Specipied cameras positioning 
     #xCam   = np.array([-0.5 , -0.25 , 0 ,  0.25 , 0.5])  
@@ -112,7 +120,7 @@ for runNo,numIms in enumerate(nRunOp):
     #camsPos = np.vstack( ( xCam , yCam , zCam ) ).transpose()
     #cams =  mgo.setCamToWorldVec(camsPos , upDirection, boundsTranslation)
     
-    ## BUILD AND SHOW SCENE
+    ## BUILD AND SHOW S2064CENE
     if show_scene:
         scene = nbv.Scene(boundsPLYPath , boundsTranslation , screenPLYPath , screenTranslation)
         scene.addCam(cams)
@@ -130,7 +138,7 @@ for runNo,numIms in enumerate(nRunOp):
             mitCam = mgo.rotScene2Mitsuba(cams[indCam][None,:]) #mitCam = cams[indCam][None,:]   
         mitsuba.SetCamera(mitCam[None,:])
         if increase_samples:
-            # increasing samples count - this is for noise statistics: variance vs. samplesCount; increasing every 10 images 
+            # increasin2064g samples count - this is for noise statistics: variance vs. samplesCount; increasing every 10 images 
             params['sampleCount'] = params['sampleCount']*2 if (np.mod(numIms,10)==0 & numIms>1) else params['sampleCount']
         simIm[indCam] , sceneInfo = mitsuba.Render(params['sampleCount'],indCam)
         currSceneInfo.append(sceneInfo)
