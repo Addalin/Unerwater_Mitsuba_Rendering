@@ -5,7 +5,7 @@ simulation: # Simulation mode
     increase_samples: false
     save_results: true
     theme_type: cloud #bg
-    nRuns: 1
+    nRuns: 2
     nViews: 1
 cams: # Cameras parameteres 
     IMX264 :
@@ -14,7 +14,7 @@ cams: # Cameras parameteres
         nWidth: 2464
         nHeight: 2056
         fov :  28.0725 
-        fovAxis : x
+        fovAxis : y
         wellDepth: 10613.0
         readNoise: 2.0
         bitDepth: 12
