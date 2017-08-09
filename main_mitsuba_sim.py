@@ -43,7 +43,7 @@ def setSimParams (fileName='', sensorName=''):
     else:
         camsParam = sim_cfg['cams']['test1']
     camsParam['samplerDimention'] = 4
-    camsParam['sampleCount'] = 1024
+    camsParam['sampleCount'] = 1024 # Samlpes per pixel
     camsParam['width'] = camsParam['nWidth']*camsParam['du']
     camsParam['height'] = camsParam['nHeight']*camsParam['dv']
             
