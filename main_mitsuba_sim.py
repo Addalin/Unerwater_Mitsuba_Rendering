@@ -110,7 +110,7 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
         print 'Done renderings for iteration run no ' + str(runNo+1)         
     
         ## PLOT RESULT
-        if simMode['show_results']:
+        if simMode['show_results'] and os.environ['SYS_NAME']!='AWS':
             showResults(simIm,numIms)
             
         ## SAVE RESULT:
@@ -193,7 +193,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
                    'beta_scale':sceneParams['betaScale'][simMode['theme_type']],       
                    'albedo_bg':sceneParams['albedo']['bg'],        
                    'albedo_theme':sceneParams['albedo']['cloud'],     
-                   'matrixA': '',          
+                   'matrixA': 'new',          
                    'res_dir':resultsPath,          
                    'recovery_dir':'',     
                    'SparseA_dir':'',      
@@ -228,14 +228,14 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'IMX264'#'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'IMX264' #'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [6,7,8] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [4,5,6] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
         # update nViews 
