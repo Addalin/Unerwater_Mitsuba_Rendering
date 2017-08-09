@@ -26,7 +26,7 @@ cams: # Cameras parameteres
         nWidth: 1936
         nHeight: 1216 
         fov : 28.0725 
-        fovAxis : x
+        fovAxis : y
         wellDepth: 33000.0
         readNoise: 6.0
         bitDepth: 12
@@ -38,7 +38,7 @@ cams: # Cameras parameteres
         nWidth: 2064
         nHeight: 1544
         fov :  28.0725
-        fovAxis : x
+        fovAxis : y
         wellDepth: 10632.0
         readNoise: 2.0
         bitDepth: 12
