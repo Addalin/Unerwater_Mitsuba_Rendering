@@ -177,7 +177,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
         append_new_log_line = False
 
     # save results in mat files
-    scipy.io.savemat(cams_file_name, mdict={'camsLookAtVectors': cams , 'camsParam': camsParam,
+    scipy.io.savemat(cams_file_name, mdict={'camsLookAtVectors': cams , 'camsParam': camsParam,'screenParams':screenParams,
                                             'sceneMitsubaParams': sceneParams,'simMode':simMode,'startTime':startTime,'runTime':runTime})
     scipy.io.savemat(imgs_file_name, {'renderedImagesMitsuba':simIm})
     #scipy.io.savemat(resultsPath + "/" + save_file_name +'_pySceneInfo.mat', mdict = {'scene_info':sceneInfo})
