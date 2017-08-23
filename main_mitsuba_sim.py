@@ -1,12 +1,15 @@
 import os, sys
 import numpy as np
 import scipy.io
-import yaml
-import pandas as pd 
-
+ 
+import nextBestViewLib as nbv
+import matplotlib.pyplot as plt
 import mitsubaWrapperLib as mitLib
 import miscGeometry as mgo
-import matplotlib.pyplot as plt
+
+
+import yaml
+import pandas as pd
 
 from time import gmtime, strftime
 import timeit
@@ -136,7 +139,7 @@ def showScene(scene_base_path,scene_name,cams,sceneParams):
     shape_filename   = scene_base_path + '/' + scene_name + '/mitsuba/' + scene_name + '.serialized'
     boundsPLYPath = scene_base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
     screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply' 
-    scene = nbv.Scene(boundsPLYPath , sceneParams['screenTranslation'] , screenPLYPath , sceneParams['screenTranslation'])
+    scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'])
     scene.addCam(cams)
     #scene.addLight(lights)
     camScale = 0.2
@@ -221,7 +224,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
 
 
 if __name__=='__main__':
-    
+    import nextBestViewLib as nbv
     print 'main_mitsuba_sim.py'
       
     ## SET SIMULATION PARAMETERS & MITSUBA PATH 
