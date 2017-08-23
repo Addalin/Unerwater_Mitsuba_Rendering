@@ -55,7 +55,7 @@ class Mitsuba(object):
                 self.scene.initialize()
                 self.scheduler = Scheduler.getInstance()
                 ## Start up the scheduling system with one worker per local core
-		if (os.environ['SYS_NAME']=='AWS') :
+		if 'SYS_NAME' in os.environ and os.environ['SYS_NAME']=='AWS' :
 			maxThreads = multiprocessing.cpu_count()
 		else:
 			maxThreads = min(multiprocessing.cpu_count(),30)
