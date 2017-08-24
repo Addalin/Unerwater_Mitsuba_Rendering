@@ -47,10 +47,10 @@ cams: # Cameras parameteres
     test1 :
         sensorName: test1
         cameraName: camera-test1
-        nWidth: 10
-        nHeight: 10
+        nWidth: 100
+        nHeight: 100
         fov :  28.0725
-        fovAxis : x
+        fovAxis : y
         wellDepth: 10632.0
         readNoise: 2.0
         bitDepth: 12
@@ -60,17 +60,19 @@ screen: # Screen parameteres
     variantRadiance: false
     screenWidth: 50.0
     screenHeight: 20.0
-    resXScreen: 200
-    resYScreen: 500
-    screenZPos: 2.0
+    resXScreen: 1
+    resYScreen: 1
+    screenZPos: 0.4 #2.0
     maxRadiance: 1.2    
 scene: # Scene parameteres  
     camsRadius: 3.0
-    camsHeight: 0.0
-    upDirection: [0.0,0.0,1.0]
-    horizon: [0.0, 1.0, 0.0]
+    camsHeight: 1.5 # 0.0
+    upDirection: [0.0, 0.0, 1.0]
+    horizon: [0.0, 1.0, 0.0] 
+    screenNormZ: true # false
+    archAngleSize: 360
     boundsTranslation: [0.0, 0.0, 0.0]  # target
-    screenTranslation: [0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
+    screenTranslation: [0,2.0 ,0] #[0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
     betaScale:
         bg: 1
         cloud: 3.33
