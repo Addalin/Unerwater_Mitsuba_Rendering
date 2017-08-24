@@ -22,13 +22,14 @@ def conv2nparray(dict_in):
     return dict_in
         
 def configNViews(simMode,sceneParams):
-    
+    """configNViews - set number of views (sceneParams['nRunOp']) and how many times (simMode['nRuns']) to render image from each point of view """
     if simMode['single_view'] :
         sceneParams['nRunOp'] = np.array([simMode['nRuns']])
         sceneParams['archAngleSize'] = 0
     else:
         sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
-        sceneParams['archAngleSize'] = 125
+        if not('archAngleSize' in sceneParams):
+            sceneParams['archAngleSize'] = 125
     return sceneParams
 
 def setSimParams (fileName='', sensorName=''):
@@ -56,15 +57,9 @@ def setSimParams (fileName='', sensorName=''):
     
     ## SET CAMERAS SPACIAL SCENE PARAMETERS
     sceneParams = sim_cfg['scene']
+    # configNViews - set number of views and how many times to render image from each point of view 
     sceneParams = configNViews(simMode,sceneParams)
     
-    #if simMode['single_view'] :
-        #sceneParams['nRunOp'] = np.array([simMode['nRuns']])
-        #sceneParams['archAngleSize'] = 0
-    #else:
-        #sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
-        #sceneParams['archAngleSize'] = 125 
-        
     return camsParam, screenParams, sceneParams, simMode
 
 def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams):
@@ -79,7 +74,7 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
     
         ## SET CAMERA'S POSITIONS (on arch)
         cams = mgo.createCamsCirc(numIms , sceneParams )
-    
+        
         ## BUILD AND SHOW SCENE
         if simMode['show_scene']:
             showScene(scene_base_path,scene_name,cams,sceneParams)   
@@ -138,8 +133,10 @@ def showScene(scene_base_path,scene_name,cams,sceneParams):
     # TODO : Fix NVB library
     shape_filename   = scene_base_path + '/' + scene_name + '/mitsuba/' + scene_name + '.serialized'
     boundsPLYPath = scene_base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
-    screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply' 
-    scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'])
+    screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply'
+    if 'screenNormZ' in sceneParams and sceneParams['screenNormZ']:
+        screenRot = mgo.rotX(90)
+    scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'], screenRot)
     scene.addCam(cams)
     #scene.addLight(lights)
     camScale = 0.2
