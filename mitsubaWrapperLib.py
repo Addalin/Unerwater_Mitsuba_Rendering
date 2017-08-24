@@ -1,5 +1,5 @@
 import os, sys
-
+import miscGeometry as mgo
 """  mitsubaWrapperLib.py - This lib is used to operate Mitsuba  """ 
 
 mitsuba_path = os.environ['MITSUBA_PATH'].replace('\\', '/')
@@ -46,7 +46,7 @@ class Mitsuba(object):
                 self.scene = SceneHandler.loadScene(self.fileResolver.resolve(scene_name + '.xml'), paramMap)
                 
                 ## Setting & adding emmiters to scene - diffusive screen, created out of multiple sub-screens
-                self.SetWideScreen()
+                #self.SetWideScreen() ### FIX SCREEN ROTATION
                 # mitsuba.SetSunSky(np.array([[3, 300,3, 0,0,0, 0,0,1]]))
                 # TODO : fix overidin of : self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
                 self.addSceneLights()
@@ -104,7 +104,7 @@ class Mitsuba(object):
                             #'reflectance' : Spectrum(0.78) # this is causing peaks noise in the result image - from reflections
 
                     },
-                    'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(dx/2, dy/2, 1)),
+                    'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform .scale(Vector(dx/2, dy/2, 1))*Transform.rotate (Vector(1, 0,0), 180.0 / 2) ,  # *Transform.rotate (Vector(1, 0,0), -90.0),
                     'emitter': {
                             'type': 'constant',#'area',#,'constant',#'area',
                             'radiance':Spectrum(radiance),
@@ -136,7 +136,8 @@ class Mitsuba(object):
                 for x in screenX:
                         for y in screenY:
                                 curRadiance = np.random.uniform(0.0, maxRadiance) if rand else maxRadiance
-                                self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)
+				pos =  np.array([x, y, screenZPos])
+                                self.SetRectangleScreen( pos, curRadiance, dx, dy)
         #def SetWideScreen(self):
                 #"""Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
                 #The radiance [Watt/(m^2*sr)] of screeen can be either constant [1] of variant unifomily [0,1] """
