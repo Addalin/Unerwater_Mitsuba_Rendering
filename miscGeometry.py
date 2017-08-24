@@ -87,19 +87,15 @@ def createCamsCirc(numViews , sceneParams):
     target = sceneParams['boundsTranslation']
     horizon = sceneParams['horizon']
     archAngleSize = sceneParams['archAngleSize']
-    
+
     archRatio = np.float(archAngleSize) / 360
-    theta   = np.linspace( archRatio * 360 ,0 , numViews )
+    theta   = np.linspace( archRatio * 360 ,0 , numViews, endpoint=False)
     axisX = np.array([1, 0, 0])
     lookingAngle = calcAngleVectors(horizon,axisX )
     
     #  Rotating arche's center - looking towords the horizon
     archCenterAngle = 180 + lookingAngle  
     curCenter = np.median(theta)
-    #if rotateArch == 0:
-        #rotate2center = center - curCenter
-    #else:
-        #rotate2center = rotateArch - curCenter -  center
     rotate2center = archCenterAngle - curCenter - lookingAngle  
     theta =  np.deg2rad(theta + rotate2center)
     
@@ -107,11 +103,14 @@ def createCamsCirc(numViews , sceneParams):
     xCam   = radius * np.sin(theta)
     yCam   = radius * np.cos(theta)
     zCam   = camHeight * np.ones(numViews)
-    
+    #zCam   = 2 * np.ones(numViews)
+    #xCam   = radius * np.sin(theta)
+    #zCam   = radius * np.cos(theta)
+    #yCam   = -1.5* np.ones(numViews)
+
     # Retreives numViews of toWorld transform vectors for each camera [self position, target = (0,0,0), up direction = (0,0,1)]
     camsPos = np.vstack( ( xCam , yCam , zCam ) ).transpose()
     cams =  setCamToWorldVec (camsPos , upDirection, target)
-    #cams = np.hstack((camsPos , np.zeros(camsPos.shape) + target, np.zeros(camsPos.shape) + upDirection))
     
     return cams
 
