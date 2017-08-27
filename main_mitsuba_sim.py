@@ -185,12 +185,13 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     print 'Results are saved at:\n', resultsPath
     
     # Add a new line to log file (once creating a new resultsPath)
+    sceneGlobalType ='bg' if 'bg' in simMode['theme_type'] else 'cloud'
     if append_new_log_line:
         log_res_new = {'resolution':resolution_str,       
                    'nViews':simMode['nViews'],           
                    'camera_radius':sceneParams['camsRadius'],  
                    'scene':simMode['theme_type'],            
-                   'beta_scale':sceneParams['betaScale'][simMode['theme_type']],       
+                   'beta_scale':sceneParams['betaScale'][sceneGlobalType],       
                    'albedo_bg':sceneParams['albedo']['bg'],        
                    'albedo_theme':sceneParams['albedo']['cloud'],     
                    'matrixA': 'new',          
@@ -228,7 +229,7 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'IMX264' #'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'IMX174' #'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
