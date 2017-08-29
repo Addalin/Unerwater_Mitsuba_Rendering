@@ -121,5 +121,25 @@
 	</shape> 
 -->
 
+<sensor type="perspective">
+		<float name="fov" value="28.0725"/>
+		<string name="fovAxis" value="y"/>
+		<transform name="toWorld">
 
+			<lookat target="0, 0, 0" origin="-2.1213, -1.5, 2.1213" up="0, -1, 0"/>
+		</transform>
+
+		<sampler type="ldsampler">
+			<integer name="sampleCount" value="64"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="height" value="400"/>
+			<integer name="width" value="400"/>
+
+			<rfilter type="gaussian"/>
+		</film>
+
+		<ref id="underwater"/>
+	</sensor>
 </scene>
