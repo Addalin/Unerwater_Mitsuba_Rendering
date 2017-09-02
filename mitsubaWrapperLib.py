@@ -176,9 +176,10 @@ class Mitsuba(object):
                    'medium' : { # commented out only for debugging - 
                                 'type' : 'homogeneous',
                                 'id': 'underwater',
-                                #'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  
+                                #'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
                                 #'sigmaS' : Spectrum([0.0, 0.0, 0.0]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
-		                'sigmaS' : Spectrum([0.133, 0.1, 0.1]), 
+                                #'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
+		                'sigmaS' : Spectrum([0.133, 0.1, 0.1]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
 		                'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),		                
                                 'phase' : {
                                         'type' : 'hg',
