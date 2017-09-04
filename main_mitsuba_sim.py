@@ -182,6 +182,11 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     
     # Add a new line to log file (once creating a new resultsPath)
     sceneGlobalType ='bg' if 'bg' in simMode['theme_type'] else 'cloud'
+    colors = ['red','green','blue']
+    channel = 'rgb'
+    for c in colors:
+        if c in simMode['theme_type']:
+            channel = c
     if append_new_log_line:
         log_res_new = {'resolution':resolution_str,       
                    'nViews':simMode['nViews'],           
@@ -194,6 +199,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
                    'res_dir':resultsPath,          
                    'recovery_dir':'',     
                    'SparseA_dir':'',      
+                   'channel':channel,
                    'comments':''
                    }
         csvlog_file_name = mitsuba_sim_path + 'results_log.csv'
@@ -232,7 +238,7 @@ if __name__=='__main__':
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [4,5,6] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [6] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
         # update nViews 
