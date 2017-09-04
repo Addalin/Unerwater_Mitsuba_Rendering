@@ -57,13 +57,6 @@ def setSimParams (fileName='', sensorName=''):
     ## SET CAMERAS SPACIAL SCENE PARAMETERS
     sceneParams = sim_cfg['scene']
     sceneParams = configNViews(simMode,sceneParams)
-    
-    #if simMode['single_view'] :
-        #sceneParams['nRunOp'] = np.array([simMode['nRuns']])
-        #sceneParams['archAngleSize'] = 0
-    #else:
-        #sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
-        #sceneParams['archAngleSize'] = 125 
         
     return camsParam, screenParams, sceneParams, simMode
 
