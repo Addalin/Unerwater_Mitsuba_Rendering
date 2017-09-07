@@ -1,13 +1,12 @@
 simulation: # Simulation mode
     show_scene: false
-    show_results: true
+    show_results: false
     single_view: false
     increase_samples: false
     save_results: true
-    theme_type: bg #bg
+    theme_type: cloud_blue #bg # cloud_green # cloud_blue # cloud_red
     nRuns: 2
     nViews: 1
-    channel: rgb # rgb # 
 cams: # Cameras parameteres 
     IMX264 :
         sensorName: IMX264
@@ -16,7 +15,7 @@ cams: # Cameras parameteres
         nHeight: 2056
         fov :  28.0725 
         fovAxis : y
-        mono: 
+        mono:
             wellDepth: 10613.0
             readNoise: 2.0
             bitDepth: 12
