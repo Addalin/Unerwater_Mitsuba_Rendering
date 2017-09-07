@@ -37,7 +37,15 @@ def setSimParams (fileName='', sensorName=''):
             sim_cfg = yaml.load(ymlfile)
             
     ## SET SIMULATION MODE  
-    simMode = sim_cfg['simulation']   
+    simMode = sim_cfg['simulation'] 
+    sceneType ='bg' if 'bg' in simMode['theme_type'] else 'cloud'
+    colors = ['red','green','blue']
+    sceneChannel = 'rgb'
+    for c in colors:
+        if c in simMode['theme_type']:
+            sceneChannel = c  
+    simMode['theme_type'] = sceneType
+    simMode['channel'] = sceneChannel
 
         
     ## SET CAMERA'S PARAMETERS   
@@ -97,7 +105,12 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
                 camsParam['sampleCount'] = camsParam['sampleCount']*2 if (np.mod(numIms,10)==0 & numIms>1) else camsParam['sampleCount']
              
             ## RENDER SCENE    
-            simIm[indCam] , sceneInfo = mitsuba.Render(camsParam['sampleCount'],indCam)
+            curIm , sceneInfo = mitsuba.Render(camsParam['sampleCount'],indCam)
+            if not(simMode['channel'])=='rgb':
+                chan = ['red','green','blue'].index(simMode['channel'])
+                curIm = curIm[:,:,chan]
+            simIm[indCam] = curIm
+                
             currSceneInfo.append(sceneInfo)
             print 'Rendered '+str(indCam + 1)+'/'+str(numIms)
             
@@ -153,7 +166,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     else:
         views_str = '_multiple_' + str(simMode['nViews']) + '_views_'
     
-    scene_type = simMode['theme_type'] + views_str
+    scene_type = simMode['theme_type'] + '_' + simMode['channel'] + views_str
     scenario_path = scene_type +  str(simMode['nRuns'])+'_runs_'+ startTime 
     resultsPath = resolution_folder_path + '/' + scenario_path  
 
@@ -179,27 +192,19 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     #scipy.io.savemat(resultsPath + "/" + save_file_name +'_pySceneInfo.mat', mdict = {'scene_info':sceneInfo})
 
     print 'Results are saved at:\n', resultsPath
-    
-    # Add a new line to log file (once creating a new resultsPath)
-    sceneGlobalType ='bg' if 'bg' in simMode['theme_type'] else 'cloud'
-    colors = ['red','green','blue']
-    channel = 'rgb'
-    for c in colors:
-        if c in simMode['theme_type']:
-            channel = c
     if append_new_log_line:
         log_res_new = {'resolution':resolution_str,       
                    'nViews':simMode['nViews'],           
                    'camera_radius':sceneParams['camsRadius'],  
                    'scene':simMode['theme_type'],            
-                   'beta_scale':sceneParams['betaScale'][sceneGlobalType],       
+                   'beta_scale':sceneParams['betaScale'][simMode['theme_type']],       
                    'albedo_bg':sceneParams['albedo']['bg'],        
                    'albedo_theme':sceneParams['albedo']['cloud'],     
                    'matrixA': 'new',          
                    'res_dir':resultsPath,          
                    'recovery_dir':'',     
                    'SparseA_dir':'',      
-                   'channel':channel,
+                   'channel':simMode['channel'],
                    'comments':''
                    }
         csvlog_file_name = mitsuba_sim_path + 'results_log.csv'
@@ -231,7 +236,7 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'IMX174' #'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'test1' #'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
