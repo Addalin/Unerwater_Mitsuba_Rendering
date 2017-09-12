@@ -85,52 +85,52 @@
 	</medium>
 
 	
-	<medium type="heterogeneous" id="water_red">
-		<string name="method" value="woodcock"/>
-		<float name="scale" value="1"/>
-		<volume name="density" type="gridvolume">
-			<string name="filename" value="water_red.vol"/>
-		</volume>
-		<volume name="albedo" type="constvolume">
-			<rgb name="value" value="0.2281, 0.6250, 0.6667"/>
-		</volume>
+	<!--<medium type="heterogeneous" id="water_red">-->
+		<!--<string name="method" value="woodcock"/>-->
+		<!--<float name="scale" value="1"/>-->
+		<!--<volume name="density" type="gridvolume">-->
+			<!--<string name="filename" value="water_red.vol"/>-->
+		<!--</volume>-->
+		<!--<volume name="albedo" type="constvolume">-->
+			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
+		<!--</volume>-->
       
-		<phase type="hg">
-			<float name="g" value="0"/>
-		</phase>
-	</medium>
+		<!--<phase type="hg">-->
+			<!--<float name="g" value="0"/>-->
+		<!--</phase>-->
+	<!--</medium>-->
 	
-	<medium type="heterogeneous" id="water_green">
-		<string name="method" value="woodcock"/>
-		<float name="scale" value="1"/>
-		<volume name="density" type="gridvolume">
-			<string name="filename" value="water_green.vol"/>
-		</volume>
-		<volume name="albedo" type="constvolume">
-			<rgb name="value" value="0.2281, 0.6250, 0.6667"/>
-		</volume>
+	<!--<medium type="heterogeneous" id="water_green">-->
+		<!--<string name="method" value="woodcock"/>-->
+		<!--<float name="scale" value="1"/>-->
+		<!--<volume name="density" type="gridvolume">-->
+			<!--<string name="filename" value="water_green.vol"/>-->
+		<!--</volume>-->
+		<!--<volume name="albedo" type="constvolume">-->
+			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
+		<!--</volume>-->
       
-		<phase type="hg">
-			<float name="g" value="0"/>
-		</phase>
-	</medium>
+		<!--<phase type="hg">-->
+			<!--<float name="g" value="0"/>-->
+		<!--</phase>-->
+	<!--</medium>-->
 	
-	<medium type="heterogeneous" id="water_blue">
-		<string name="method" value="woodcock"/>
-		<float name="scale" value="1"/>
+	<!--<medium type="heterogeneous" id="water_blue">-->
+		<!--<string name="method" value="woodcock"/>-->
+		<!--<float name="scale" value="1"/>-->
 		
-		<volume name="density" type="gridvolume">
-			<string name="filename" value="water_blue.vol"/>
-		</volume>
+		<!--<volume name="density" type="gridvolume">-->
+			<!--<string name="filename" value="water_blue.vol"/>-->
+		<!--</volume>-->
 		
-		<volume name="albedo" type="constvolume">
-			<rgb name="value" value="0.2281, 0.6250, 0.6667"/>
-		</volume>
+		<!--<volume name="albedo" type="constvolume">-->
+			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
+		<!--</volume>-->
       
-		<phase type="hg">
-			<float name="g" value="0"/>
-		</phase>
-	</medium>
+		<!--<phase type="hg">-->
+			<!--<float name="g" value="0"/>-->
+		<!--</phase>-->
+	<!--</medium>-->
 
 	<medium type="homogeneous" id="underwater">
 		<rgb name="sigmaS" value="0.133, 0.1, 0.1"/> 
