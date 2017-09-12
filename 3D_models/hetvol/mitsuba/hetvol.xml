@@ -135,7 +135,7 @@
 	<medium type="homogeneous" id="underwater">
 		<rgb name="sigmaS" value="0.133, 0.1, 0.1"/> 
 		<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>
-		<rgb name="sigmaA" value="0.0, 0.0, 0.0"/>
+		<!--<rgb name="sigmaA" value="0.0, 0.0, 0.0"/>-->
 		
 		<phase type="hg">
 			<float name="g" value="0.9"/>
@@ -160,9 +160,9 @@
 	
 		<ref name="interior" id="underwater"/>
 		
-		<ref name="exterior" id="underwater"/>
+		<!--<ref name="exterior" id="underwater"/>-->
 		<!--<ref name="exterior" id="smoke"/>-->
-		<!--<ref name="exterior" id="smoke_red"/>-->
+		<ref name="exterior" id="smoke_red"/>
 		<!--<ref name="exterior" id="smoke_green"/>-->
 		<!--<ref name="exterior" id="smoke_blue"/>-->
 		
