@@ -27,8 +27,8 @@
 		<phase type="hg">
 			<float name="g" value="0.9"/>
 		</phase>
-		<point name="min" x="-0.5" y="-0.5" z="-0.4"/>
-		<point name="max" x="0.5" y="0.5" z="0.4"/>
+		<!--<point name="min" x="-0.5" y="-0.5" z="-0.4"/>-->
+		<!--<point name="max" x="0.5" y="0.5" z="0.4"/>-->
 	</medium>
 	
 	<medium type="heterogeneous" id="smoke_red">
@@ -70,6 +70,7 @@
 		<string name="method" value="woodcock"/>
 		<float name="scale" value="1"/>
 		<volume name="density" type="gridvolume">
+			<!--<string name="filename" value="smoke_water_new_res_blue.vol"/>-->
 			<string name="filename" value="smoke_water_blue.vol"/>
 		</volume>
 		
@@ -133,8 +134,9 @@
 
 	<medium type="homogeneous" id="underwater">
 		<rgb name="sigmaS" value="0.133, 0.1, 0.1"/> 
-		<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>
-
+		<!--<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>-->
+		<rgb name="sigmaA" value="0.0, 0.0, 0.0"/>
+		
 		<phase type="hg">
 			<float name="g" value="0.9"/>
 		</phase>
@@ -158,11 +160,11 @@
 	
 		<ref name="interior" id="underwater"/>
 		
-		<!--<ref name="exterior" id="underwater"/>-->
+		<ref name="exterior" id="underwater"/>
 		<!--<ref name="exterior" id="smoke"/>-->
-		<!--<ref name="exterior" id="smoke_green"/>-->
-		<ref name="exterior" id="smoke_green"/>
-		<!--<ref name="exterior" id="smoke_blue"/>-->
+		<!--<ref name="exterior" id="smoke_water_new_red"/>-->
+		<!--<ref name="exterior" id="smoke_water_new_green"/>-->
+		<!--<ref name="exterior" id="smoke_water_new_blue"/>-->
 		
 		<!--ref name="interior" id="vacuum"/-->
 		<!--ref name="exterior" id="vacuum"/-->
