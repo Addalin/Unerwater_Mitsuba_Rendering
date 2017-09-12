@@ -36,11 +36,11 @@
 		<string name="method" value="woodcock"/>
 		<float name="scale" value="1"/>
 		<volume name="density" type="gridvolume">
-			<string name="filename" value="smoke_water_red.vol"/>
+			<string name="filename" value="smoke_water_new_red.vol"/>
 		</volume>
 		
 		<volume name="albedo" type="gridvolume">
-			<string name="filename" value="albedo_rgb.vol"/>
+			<string name="filename" value="albedo_new_rgb.vol"/>
 		</volume>
 		
 		<phase type="hg">
@@ -53,11 +53,11 @@
 		<string name="method" value="woodcock"/>
 		<float name="scale" value="1"/>
 		<volume name="density" type="gridvolume">
-			<string name="filename" value="smoke_water_green.vol"/>
+			<string name="filename" value="smoke_water_new_green.vol"/>
 		</volume>
 		
 		<volume name="albedo" type="gridvolume">
-			<string name="filename" value="albedo_rgb.vol"/>
+			<string name="filename" value="albedo_new_rgb.vol"/>
 		</volume>
 		
 		<phase type="hg">
@@ -71,11 +71,11 @@
 		<float name="scale" value="1"/>
 		<volume name="density" type="gridvolume">
 			<!--<string name="filename" value="smoke_water_new_res_blue.vol"/>-->
-			<string name="filename" value="smoke_water_blue.vol"/>
+			<string name="filename" value="smoke_water_new_blue.vol"/>
 		</volume>
 		
 		<volume name="albedo" type="gridvolume">
-			<string name="filename" value="albedo_rgb.vol"/>
+			<string name="filename" value="albedo_new_rgb.vol"/>
 		</volume>
 		
 		<phase type="hg">
@@ -134,7 +134,7 @@
 
 	<medium type="homogeneous" id="underwater">
 		<rgb name="sigmaS" value="0.133, 0.1, 0.1"/> 
-		<!--<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>-->
+		<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>
 		<rgb name="sigmaA" value="0.0, 0.0, 0.0"/>
 		
 		<phase type="hg">
@@ -162,9 +162,9 @@
 		
 		<ref name="exterior" id="underwater"/>
 		<!--<ref name="exterior" id="smoke"/>-->
-		<!--<ref name="exterior" id="smoke_water_new_red"/>-->
-		<!--<ref name="exterior" id="smoke_water_new_green"/>-->
-		<!--<ref name="exterior" id="smoke_water_new_blue"/>-->
+		<!--<ref name="exterior" id="smoke_red"/>-->
+		<!--<ref name="exterior" id="smoke_green"/>-->
+		<!--<ref name="exterior" id="smoke_blue"/>-->
 		
 		<!--ref name="interior" id="vacuum"/-->
 		<!--ref name="exterior" id="vacuum"/-->
