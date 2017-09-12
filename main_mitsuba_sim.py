@@ -205,7 +205,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
                    'recovery_dir':'',     
                    'SparseA_dir':'',      
                    'channel':simMode['channel'],
-                   'comments':''
+                   'comments':simMode['comments'] #'New resolution'
                    }
         csvlog_file_name = mitsuba_sim_path + 'results_log.csv'
         log_res_df = pd.read_csv(csvlog_file_name,sep=',',index_col=False)
@@ -236,7 +236,7 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'test1' #'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'IMX174' #'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
