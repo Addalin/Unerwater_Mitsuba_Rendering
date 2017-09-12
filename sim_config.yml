@@ -4,9 +4,10 @@ simulation: # Simulation mode
     single_view: false
     increase_samples: false
     save_results: true
-    theme_type: cloud_blue #bg # cloud_green # cloud_blue # cloud_red
+    theme_type: bg_rgb #bg # cloud_green # cloud_blue # cloud_red
     nRuns: 2
     nViews: 1
+    comments: 
 cams: # Cameras parameteres 
     IMX264 :
         sensorName: IMX264
