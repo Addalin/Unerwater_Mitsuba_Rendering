@@ -243,7 +243,7 @@ if __name__=='__main__':
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [6] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [6,7,8] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
         # update nViews 
