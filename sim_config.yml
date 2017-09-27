@@ -1,13 +1,13 @@
 simulation: # Simulation mode
     show_scene: false
-    show_results: true
+    show_results: false
     single_view: false
     increase_samples: false
     save_results: true
-    theme_type: cloud_rgb #bg # cloud_green # cloud_blue # cloud_red
+    theme_type: cloud_blue #bg # cloud_green # cloud_blue # cloud_red
     nRuns: 2
     nViews: 1
-    comments: beta_scale=10
+    comments: vacuum_cloud_beta_scale=10
 cams: # Cameras parameteres 
     IMX264 :
         sensorName: IMX264
@@ -21,7 +21,7 @@ cams: # Cameras parameteres
             readNoise: 2.0
             bitDepth: 12
         rgb: 
-            wellDepth: 10613.0
+            wellDepth: 10606.0
             readNoise: 2.0
             bitDepth: 12
         du: 3.45e-6 
