@@ -31,7 +31,7 @@ class Mitsuba(object):
         
     # Constructor
         def __init__(self, base_path,scene_name,params,screenParams):    
-
+		
                 self.params = params
                 self.screenParams = screenParams
                 self.light = []
@@ -178,8 +178,10 @@ class Mitsuba(object):
                                 'type' : 'homogeneous',
                                 'id': 'underwater',
                                 #'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
-                                'sigmaS' : Spectrum([0.0, 0.0, 0.0]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
-                                'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
+                                #'sigmaS' : Spectrum([0.0, 0.0, 0.0]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
+                                #'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
+		                'sigmaS' : Spectrum([0.133, 0.1, 0.1]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
+		                'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),		                
                                 'phase' : {
                                         'type' : 'hg',
                                         'g' : 0.9

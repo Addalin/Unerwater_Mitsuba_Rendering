@@ -13,56 +13,136 @@
 		<string name="method" value="woodcock"/>
 
 		<volume name="density" type="gridvolume">
-			<string name="filename" value="cloud_water_green.vol"/>
-			<!--string name="filename" value="cubic_water_green.vol"/-->
-			<!--transform name="toWorld">
-				<rotate x="1" angle="90"/>
-			</transform-->
+			<string name="filename" value="smoke.vol"/>
+			<!--<transform name="toWorld">
+				<rotate z="1" angle="180"/>
+			</transform>-->
 		</volume>
-		<float name="scale" value="1"/>
-    <!--float name="scale" value="0.36"/-->
-		
+		<float name="scale" value="10.0"/>
+
 		<volume name="albedo" type="constvolume">
-			<!--rgb name="value" value="0.5"/-->
-			<rgb name="value" value="0.0, 0.0, 0.0"/> <!-- for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA-->
-			<!--rgb name="value" value="0.4706, 0.8333, 0.8571"/-->
+			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
+			<rgb name="value" value="0.0, 0.0, 0.0"/>
+
 		</volume>
 
 		<phase type="hg">
+			<!--<float name="g" value="0.9"/>-->
+			<float name="g" value="0.0"/>
+
+		</phase>
+		<!--<point name="min" x="-0.5" y="-0.5" z="-0.4"/>-->
+		<!--<point name="max" x="0.5" y="0.5" z="0.4"/>-->
+	</medium>
+	
+	<medium type="heterogeneous" id="smoke_red">
+	
+		<string name="method" value="woodcock"/>
+		<float name="scale" value="1"/>
+		<volume name="density" type="gridvolume">
+			<string name="filename" value="smoke_water_dscaled12_2_red.vol"/>
+		</volume>
+		<float name="scale" value="12.2"/>
+		<volume name="albedo" type="gridvolume">
+			<string name="filename" value="albedo_dscaled12_2_rgb.vol"/>
+		</volume>
+		
+		<phase type="hg">
 			<float name="g" value="0.9"/>
 		</phase>
-		<point name="min" x="-0.5" y="-0.5" z="-0.4"/>
-		<point name="max" x="0.5" y="0.5" z="0.4"/>
 	</medium>
- 
-	<medium type="heterogeneous" id="cubic">
-	  <string name="method" value="woodcock"/>
-	  <volume name="density" type="gridvolume">
-	    <string name="filename" value="cubic_test.vol"/>
-	  </volume>
 	
-		      <volume name="albedo" type="constvolume">
-			      <rgb name="value" value="0"/>   
-		      </volume>
+ 	<medium type="heterogeneous" id="smoke_green">
 	
-		      <phase type="hg">
-			<float name="g" value="0"/>
-		      </phase>
-		      <point name="min" x="-0.5" y="-0.5" z="-0.4"/>
-		      <point name="max" x="0.5" y="0.5" z="0.4"/>
+		<string name="method" value="woodcock"/>
+		<float name="scale" value="1"/>
+		<volume name="density" type="gridvolume">
+			<string name="filename" value="smoke_water_dscaled12_2_green.vol"/>
+		</volume>
+		<float name="scale" value="12.2"/>
+		<volume name="albedo" type="gridvolume">
+			<string name="filename" value="albedo_dscaled12_2_rgb.vol"/>
+		</volume>
+		
+		<phase type="hg">
+			<float name="g" value="0.9"/>
+		</phase>
 	</medium>
+	
+	<medium type="heterogeneous" id="smoke_blue">
+	
+		<string name="method" value="woodcock"/>
+		<float name="scale" value="1"/>
+		<volume name="density" type="gridvolume">
+			<string name="filename" value="smoke_water_dscaled12_2_blue.vol"/>
+		</volume>
+		<float name="scale" value="12.2"/>
+		<volume name="albedo" type="gridvolume">
+			<string name="filename" value="albedo_dscaled12_2_rgb.vol"/>
+		</volume>
+		
+		<phase type="hg">
+			<float name="g" value="0.9"/>
+		</phase>
+
+	</medium>
+
+	
+	<!--<medium type="heterogeneous" id="water_red">-->
+		<!--<string name="method" value="woodcock"/>-->
+		<!--<float name="scale" value="1"/>-->
+		<!--<volume name="density" type="gridvolume">-->
+			<!--<string name="filename" value="water_red.vol"/>-->
+		<!--</volume>-->
+		<!--<volume name="albedo" type="constvolume">-->
+			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
+		<!--</volume>-->
+      
+		<!--<phase type="hg">-->
+			<!--<float name="g" value="0"/>-->
+		<!--</phase>-->
+	<!--</medium>-->
+	
+	<!--<medium type="heterogeneous" id="water_green">-->
+		<!--<string name="method" value="woodcock"/>-->
+		<!--<float name="scale" value="1"/>-->
+		<!--<volume name="density" type="gridvolume">-->
+			<!--<string name="filename" value="water_green.vol"/>-->
+		<!--</volume>-->
+		<!--<volume name="albedo" type="constvolume">-->
+			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
+		<!--</volume>-->
+      
+		<!--<phase type="hg">-->
+			<!--<float name="g" value="0"/>-->
+		<!--</phase>-->
+	<!--</medium>-->
+	
+	<!--<medium type="heterogeneous" id="water_blue">-->
+		<!--<string name="method" value="woodcock"/>-->
+		<!--<float name="scale" value="1"/>-->
+		
+		<!--<volume name="density" type="gridvolume">-->
+			<!--<string name="filename" value="water_blue.vol"/>-->
+		<!--</volume>-->
+		
+		<!--<volume name="albedo" type="constvolume">-->
+			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
+		<!--</volume>-->
+      
+		<!--<phase type="hg">-->
+			<!--<float name="g" value="0"/>-->
+		<!--</phase>-->
+	<!--</medium>-->
 
 	<medium type="homogeneous" id="underwater">
-		<!--rgb name="sigmaS" value="0.4, 0.3, 0.3"/--> 
-		<rgb name="sigmaS" value="0.0, 0.0, 0.0"/>   <!-- for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA-->
+		<rgb name="sigmaS" value="0.133, 0.1, 0.1"/> 
 		<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>
-	
+		<!--<rgb name="sigmaA" value="0.0, 0.0, 0.0"/>-->
+		
 		<phase type="hg">
 			<float name="g" value="0.9"/>
 		</phase>
-		<!--<float name="scale" value="0.5"/> -->
-		<!--point name="min" x="-25" y="-10" z="-10"/-->
-		<!--point name="max" x="25" y="10" z="10"/-->
 	</medium>
  
  
@@ -73,9 +153,6 @@
 		<phase type="hg">
 			<float name="g" value="0 "/>
 		</phase> 
-     
-    <!--point name="min" x="-25" y="-10" z="-10"/-->
-		<!--point name="max" x="25" y="10" z="10"/-->
 	</medium>
 
 	<shape type="obj" id="aquarium">
@@ -85,21 +162,22 @@
 		</transform>
 	
 		<ref name="interior" id="underwater"/>
-		<!--ref name="exterior" id="underwater"/-->
-		<ref name="exterior" id="smoke"/>
-	      <!--ref name="exterior" id="cubic"/-->
-	      <!--ref name="interior" id="vacuum"/-->
-	      <!--ref name="exterior" id="vacuum"/-->
-	  
+		<!--<ref name="exterior" id="underwater"/>-->
+		<!--<ref name="exterior" id="smoke"/>-->
+		<!--<ref name="exterior" id="smoke_red"/>-->
+		<!--<ref name="exterior" id="smoke_green"/>-->
+		<ref name="exterior" id="smoke_blue"/>
+		
+		<!--<ref name="interior" id="vacuum"/>-->
+		<!--<ref name="exterior" id="vacuum"/>-->
+	    
 		<bsdf type="dielectric">
-		  <!--float name="intIOR" value="1.0"/>
-		  <float name="extIOR" value="1.0"/-->
-		  <!--string name="intIOR" value="vacuum"/>
-		  <string name="extIOR" value="vacuum"/-->
-		  <string name="intIOR" value="water"/>
-		  <string name="extIOR" value="water"/>
+			<!--string name="intIOR" value="vacuum"/>
+			<string name="extIOR" value="vacuum"/-->
+			<string name="intIOR" value="water"/>
+			<string name="extIOR" value="water"/>
 		</bsdf>
-	
+	    
 	</shape>
  
  
@@ -111,15 +189,16 @@
 		</bsdf>
 
 		<emitter type="area">
-			<spectrum name="radiance" value="1.2"/>
+			<spectrum name="radiance" value="1"/>
 		</emitter>
+		
 		<transform name="toWorld">
 			<translate z="2"/>
 			<rotate x="1" angle= "-90"/>
 		</transform>
 	</shape> 
 
-<sensor type="perspective">
+	<sensor type="perspective">
 		<float name="fov" value="28.0725"/>
 		<string name="fovAxis" value="y"/>
 		<transform name="toWorld">
@@ -132,6 +211,8 @@
 		</sampler>
 
 		<film type="hdrfilm">
+			<string name = "pixelFormat" value="rgb"/>
+			<string name="channelNames" value="B"/>
 			<integer name="height" value="400"/>
 			<integer name="width" value="400"/>
 
