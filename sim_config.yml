@@ -4,60 +4,44 @@ simulation: # Simulation mode
     single_view: false
     increase_samples: false
     save_results: true
-    theme_type: cloud_rgb #bg # cloud_green # cloud_blue # cloud_red
+    theme_type: cloud #bg
     nRuns: 2
     nViews: 1
-    comments: vacuum_cloud_beta_scale=10
 cams: # Cameras parameteres 
     IMX264 :
         sensorName: IMX264
-        cameraName: Manta G-507
+        cameraName: Manta G-507C
         nWidth: 2464
         nHeight: 2056
         fov :  28.0725 
         fovAxis : y
-        mono:
-            wellDepth: 10613.0
-            readNoise: 2.0
-            bitDepth: 12
-        rgb: 
-            wellDepth: 10606.0
-            readNoise: 2.0
-            bitDepth: 12
+        wellDepth: 10613.0
+        readNoise: 2.0
+        bitDepth: 12
         du: 3.45e-6 
         dv: 3.45e-6 
     IMX174 :
         sensorName: IMX174
-        cameraName: Manta G-235
+        cameraName: Manta G-235C
         nWidth: 1936
         nHeight: 1216 
         fov : 28.0725 
         fovAxis : y
-        mono:
-            wellDepth: 32014.0 
-            readNoise: 6.2
-            bitDepth: 12
-        rgb: 
-            wellDepth: 32870.0 
-            readNoise: 6.2
-            bitDepth: 12
+        wellDepth: 33000.0
+        readNoise: 6.0
+        bitDepth: 12
         du: 5.86e-6 
         dv: 5.86e-6 
     IMX265 :
         sensorName: IMX265
-        cameraName: Manta G-319
+        cameraName: Manta G-319C
         nWidth: 2064
         nHeight: 1544
-        fov:  28.0725
-        fovAxis: y
-        mono: 
-            wellDepth: 10596.0
-            readNoise: 1.9
-            bitDepth: 12
-        rgb:
-            wellDepth: 10632.0
-            readNoise: 2.0
-            bitDepth: 12
+        fov :  28.0725
+        fovAxis : y
+        wellDepth: 10632.0
+        readNoise: 2.0
+        bitDepth: 12
         du: 3.45e-6 
         dv: 3.45e-6 
     test1 :

@@ -38,15 +38,7 @@ def setSimParams (fileName='', sensorName=''):
             sim_cfg = yaml.load(ymlfile)
             
     ## SET SIMULATION MODE  
-    simMode = sim_cfg['simulation'] 
-    sceneType ='bg' if 'bg' in simMode['theme_type'] else 'cloud'
-    colors = ['red','green','blue']
-    sceneChannel = 'rgb'
-    for c in colors:
-        if c in simMode['theme_type']:
-            sceneChannel = c  
-    simMode['theme_type'] = sceneType
-    simMode['channel'] = sceneChannel
+    simMode = sim_cfg['simulation']   
 
         
     ## SET CAMERA'S PARAMETERS   
@@ -67,7 +59,7 @@ def setSimParams (fileName='', sensorName=''):
     sceneParams = sim_cfg['scene']
     # configNViews - set number of views and how many times to render image from each point of view 
     sceneParams = configNViews(simMode,sceneParams)
-
+    
     return camsParam, screenParams, sceneParams, simMode
 
 def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams):
@@ -107,12 +99,7 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
                 camsParam['sampleCount'] = camsParam['sampleCount']*2 if (np.mod(numIms,10)==0 & numIms>1) else camsParam['sampleCount']
              
             ## RENDER SCENE    
-            curIm , sceneInfo = mitsuba.Render(camsParam['sampleCount'],indCam)
-            if not(simMode['channel'])=='rgb':
-                chan = ['red','green','blue'].index(simMode['channel'])
-                curIm = curIm[:,:,chan]
-            simIm[indCam] = curIm
-                
+            simIm[indCam] , sceneInfo = mitsuba.Render(camsParam['sampleCount'],indCam)
             currSceneInfo.append(sceneInfo)
             print 'Rendered '+str(indCam + 1)+'/'+str(numIms)
             
@@ -170,7 +157,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     else:
         views_str = '_multiple_' + str(simMode['nViews']) + '_views_'
     
-    scene_type = simMode['theme_type'] + '_' + simMode['channel'] + views_str
+    scene_type = simMode['theme_type'] + views_str
     scenario_path = scene_type +  str(simMode['nRuns'])+'_runs_'+ startTime 
     resultsPath = resolution_folder_path + '/' + scenario_path  
 
@@ -196,7 +183,9 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     #scipy.io.savemat(resultsPath + "/" + save_file_name +'_pySceneInfo.mat', mdict = {'scene_info':sceneInfo})
 
     print 'Results are saved at:\n', resultsPath
-
+    
+    # Add a new line to log file (once creating a new resultsPath)
+    sceneGlobalType ='bg' if 'bg' in simMode['theme_type'] else 'cloud'
     if append_new_log_line:
         log_res_new = {'resolution':resolution_str,       
                    'nViews':simMode['nViews'],           
@@ -209,8 +198,7 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
                    'res_dir':resultsPath,          
                    'recovery_dir':'',     
                    'SparseA_dir':'',      
-                   'channel':simMode['channel'],
-                   'comments':simMode['comments'] #'New resolution'
+                   'comments':''
                    }
         csvlog_file_name = mitsuba_sim_path + 'results_log.csv'
         log_res_df = pd.read_csv(csvlog_file_name,sep=',',index_col=False)
@@ -241,14 +229,14 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'test1' #'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'IMX174' #'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [3] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [4,5,6] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
         # update nViews 
