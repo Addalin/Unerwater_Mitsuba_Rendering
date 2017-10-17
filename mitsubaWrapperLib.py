@@ -46,7 +46,7 @@ class Mitsuba(object):
                 self.scene = SceneHandler.loadScene(self.fileResolver.resolve(scene_name + '.xml'), paramMap)
                 
                 ## Setting & adding emmiters to scene - diffusive screen, created out of multiple sub-screens
-                self.SetWideScreen()
+                # self.SetWideScreen()
                 # mitsuba.SetSunSky(np.array([[3, 300,3, 0,0,0, 0,0,1]]))
                 # TODO : fix overidin of : self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
                 self.addSceneLights()
