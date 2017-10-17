@@ -89,7 +89,7 @@ def createCamsCirc(numViews , sceneParams):
     archAngleSize = sceneParams['archAngleSize']
     
     archRatio = np.float(archAngleSize) / 360
-    theta   = np.linspace( archRatio * 360 ,0 , numViews )
+    theta   = np.linspace( archRatio * 360 ,0 , numViews,endpoint = False )
     axisX = np.array([1, 0, 0])
     lookingAngle = calcAngleVectors(horizon,axisX )
     
