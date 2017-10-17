@@ -181,7 +181,6 @@
 	    
 	</shape>
   
-<!--
  	<shape name="screen" type="obj">
 		<string name="filename" value="extraWideScreen.obj"/>
 		
@@ -196,7 +195,6 @@
 			<translate z="2"/>
 		</transform>
 	</shape> 
---->
 
 <sensor type="perspective">
 		<float name="fov" value="28.0725"/>
