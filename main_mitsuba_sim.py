@@ -28,7 +28,6 @@ def configNViews(simMode,sceneParams):
         sceneParams['archAngleSize'] = 0
     else:
         sceneParams['nRunOp'] = np.ones(simMode['nRuns'],dtype=int)*simMode['nViews']
-        sceneParams['archAngleSize'] = 125
     return sceneParams
 
 def setSimParams (fileName='', sensorName=''):
@@ -144,7 +143,7 @@ def showScene(scene_base_path,scene_name,cams,sceneParams):
     # TODO : Fix NVB library
     shape_filename   = scene_base_path + '/' + scene_name + '/mitsuba/' + scene_name + '.serialized'
     boundsPLYPath = scene_base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
-    screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply' 
+    screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply'
     scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'])
     scene.addCam(cams)
     #scene.addLight(lights)
@@ -236,14 +235,14 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'IMX174' #'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'test1' #'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [6,7,8] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [8] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
         # update nViews 
