@@ -11,8 +11,8 @@ class Scene(object):
     # Constructor
     def __init__(self, boundsFilename , boundsTrans , screenFilename , screenTrans, screenRot = np.eye(3)):
         self.boundsVertices, self.boundsFaces = pvd.ply2Poly(boundsFilename, boundsTrans)
-        self.screenVertices, self.screenFaces = pvd.ply2Poly(screenFilename, screenTrans)
-        self.screenVertices = self.screenVertices.dot(screenRot)
+        self.screenVertices, self.screenFaces = pvd.ply2Poly(screenFilename) 
+        self.screenVertices = self.screenVertices.dot(screenRot) +  screenTrans
         self.cams = None
         self.lights = None
     
