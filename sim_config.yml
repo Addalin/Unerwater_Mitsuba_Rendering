@@ -1,10 +1,10 @@
 simulation: # Simulation mode
     show_scene: false
-    show_results: false
+    show_results: true
     single_view: false
     increase_samples: false
-    save_results: true
-    theme_type: cloud_blue #bg # cloud_green # cloud_blue # cloud_red
+    save_results: false
+    theme_type: cloud_rgb #bg # cloud_green # cloud_blue # cloud_red
     nRuns: 2
     nViews: 1
     comments: vacuum_cloud_beta_scale=10
@@ -76,17 +76,18 @@ screen: # Screen parameteres
     variantRadiance: false
     screenWidth: 50.0
     screenHeight: 20.0
-    resXScreen: 200
-    resYScreen: 500
-    screenZPos: 2.0
+    resXScreen: 1
+    resYScreen: 1
+    screenZPos: 0.0
     maxRadiance: 1.2    
 scene: # Scene parameteres  
     camsRadius: 3.0
-    camsHeight: 0.0
+    camsHeight: 0.0 #1.5
     upDirection: [0.0,0.0,1.0]
     horizon: [0.0, 1.0, 0.0]
     boundsTranslation: [0.0, 0.0, 0.0]  # target
-    screenTranslation: [0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
+    screenTranslation: [0, 2, 0] #[0.0, 0.0 , -0.51] #[0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
+    archAngleSize: 125 #360
     betaScale:
         bg: 1
         cloud: 3.33
