@@ -87,7 +87,7 @@ scene: # Scene parameteres
     horizon: [0.0, 1.0, 0.0]
     boundsTranslation: [0.0, 0.0, 0.0]  # target
     screenTranslation: [0, 2, 0] #[0.0, 0.0 , -0.51] #[0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
-    archAngleSize: 125 #360
+    archAngleSize: 360
     betaScale:
         bg: 1
         cloud: 3.33
