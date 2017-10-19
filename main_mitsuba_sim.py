@@ -140,9 +140,10 @@ def showResults(simIm,numIms):
     
 def showScene(scene_base_path,scene_name,cams,sceneParams):
     """Show 3D scene"""
-    shape_filename   = scene_base_path + '/' + scene_name + '/mitsuba/' + scene_name + '.serialized'
-    boundsPLYPath = scene_base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
-    screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply'
+    obj_path = scene_base_path + '/' + scene_name
+    shape_filename   = obj_path + '/mitsuba/' + scene_name + '.serialized'
+    boundsPLYPath = obj_path + '/bounds' + '.ply'
+    screenPLYPath = obj_path + '/wideScreen' + '.ply'
     scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'])
     scene.addCam(cams)
     #scene.addLight(lights)
