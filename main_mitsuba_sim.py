@@ -140,7 +140,6 @@ def showResults(simIm,numIms):
     
 def showScene(scene_base_path,scene_name,cams,sceneParams):
     """Show 3D scene"""
-    # TODO : Fix NVB library
     shape_filename   = scene_base_path + '/' + scene_name + '/mitsuba/' + scene_name + '.serialized'
     boundsPLYPath = scene_base_path + '/' + scene_name + '/' + 'bounds' + '.ply'
     screenPLYPath = scene_base_path + '/'  + scene_name + '/' + 'wideScreen' + '.ply'
@@ -242,7 +241,7 @@ if __name__=='__main__':
     scene_name = 'hetvol'
     
     ## RUN SIMULATION:
-    for nViews in [8] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [3] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
         simMode['nViews'] = nViews
         # update nViews 
