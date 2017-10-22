@@ -73,7 +73,7 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
     startTime = strftime("%d-%m-%Y_%H-%M-%S", gmtime())
     print startTime + ' Start running Mitsuba simulation'
     
-    ## LOAD MITSUBA SCENE & ADD LIGHTS SOURCES
+    ## LOAD MITSUBA SCENE & ADD LIGHTS SOURCES 
     mitsuba = mitLib.Mitsuba(scene_base_path,scene_name,camsParam,screenParams)
     
     for runNo,numIms in enumerate(sceneParams['nRunOp']):
@@ -83,7 +83,7 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
     
         ## BUILD AND SHOW SCENE
         if simMode['show_scene']:
-            showScene(scene_base_path,scene_name,cams,sceneParams)   
+            showScene(scene_base_path,scene_name,cams,sceneParams,simMode['screen_mode'] )   
     
         
         simIm =  np.zeros(numIms,dtype=np.object)  # output images
@@ -139,13 +139,14 @@ def showResults(simIm,numIms):
         plt.axis('off')
     plt.show()
     
-def showScene(scene_base_path,scene_name,cams,sceneParams):
+def showScene(scene_base_path,scene_name,cams,sceneParams, screen_mode):
     """Show 3D scene"""
     obj_path = scene_base_path + '/' + scene_name
     shape_filename   = obj_path + '/mitsuba/' + scene_name + '.serialized'
     boundsPLYPath = obj_path + '/bounds' + '.ply'
     screenPLYPath = obj_path + '/wideScreen' + '.ply'
-    scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'])
+    screenRot = np.eye(3) if screen_mode == 'vertical' else mgo.rotX(90)
+    scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'], screenRot)
     scene.addCam(cams)
     #scene.addLight(lights)
     camScale = 0.2

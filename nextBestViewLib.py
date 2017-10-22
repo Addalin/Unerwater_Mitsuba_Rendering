@@ -65,8 +65,8 @@ class Scene(object):
             
             for i in range(self.lights.shape[0]):
                 self.__plotObj(self.lights[i,:],shape_points,(1,1,0),'Light'+str(i))
-        if do_show:        
-            mi.show()        
+        if do_show:
+            mi.show()
 
     #  -------------- Private methods --------------        
     
