@@ -19,7 +19,7 @@ from mitsuba.render import Scene
 import multiprocessing
 #import cv2
 import numpy as np
-
+import miscGeometry as mgo
 
 # Each row is a cam & light location in Mitsuba's LookAt format,
 # i.e. [Point(position) Point(looking towards) Vector(up direction)].
@@ -46,6 +46,7 @@ class Mitsuba(object):
                 self.scene = SceneHandler.loadScene(self.fileResolver.resolve(scene_name + '.xml'), paramMap)
                 
                 ## Setting & adding emmiters to scene - diffusive screen, created out of multiple sub-screens
+		# a nice try to manipulate screen position - this is still not working, hence changing screen pos in hetvol.xml
                 # self.SetWideScreen()
                 # mitsuba.SetSunSky(np.array([[3, 300,3, 0,0,0, 0,0,1]]))
                 # TODO : fix overidin of : self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
@@ -102,9 +103,10 @@ class Mitsuba(object):
                             'type': 'diffuse',
                             'illuminant':Spectrum(1.0)
                             #'reflectance' : Spectrum(0.78) # this is causing peaks noise in the result image - from reflections
-
                     },
                     'toWorld' : Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2])) * Transform.rotate (Vector(1, 0,0), 180.0) * Transform .scale(Vector(dx/2, dy/2, 1)),
+		    # a nice try to manipulate screen position - this is still not working, hence changing screen pos in hetvol.xml
+		    #'toWorld' : Transform.scale(Vector(dx/2, 1, dy/2))*Transform.translate(Vector (screenPos[0], screenPos[1], screenPos[2]))*Transform.rotate (Vector(1, 0,0), 90.0),
                     'emitter': {
                             'type': 'constant',#'area',#,'constant',#'area',
                             'radiance':Spectrum(radiance),
@@ -136,7 +138,13 @@ class Mitsuba(object):
                 for x in screenX:
                         for y in screenY:
                                 curRadiance = np.random.uniform(0.0, maxRadiance) if rand else maxRadiance
-                                self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)
+				self.SetRectangleScreen( np.array([x, y, screenZPos]), curRadiance, dx, dy)
+				# a nice try to manipulate screen position - this is still not working, hence changin screen pos in hetvol.xml 
+				#pos =   np.array([x, y, -0.51, 0, 0, 0, 0, 0, 1])
+				#pos = mgo.rotScene2Mitsuba(pos)
+				#self.SetRectangleScreen( pos, curRadiance, dx, dy)
+				#self.SetRectangleScreen( pos[0:3], curRadiance, dx, dy)
+                                
         #def SetWideScreen(self):
                 #"""Set a screen of light at Z = screenZPos, with dimentions of [width X height], containing [resX X resY] sub-surfaces of screens.
                 #The radiance [Watt/(m^2*sr)] of screeen can be either constant [1] of variant unifomily [0,1] """

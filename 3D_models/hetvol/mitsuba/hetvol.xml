@@ -192,7 +192,8 @@
 			<spectrum name="radiance" value="1"/>
 		</emitter>
 		<transform name="toWorld">
-			<translate z="2"/>
+			<translate z="0.51"/>
+			<rotate x="1" angle="-90.0"/>
 		</transform>
 	</shape> 
 
@@ -201,7 +202,7 @@
 		<string name="fovAxis" value="y"/>
 		<transform name="toWorld">
 
-			<lookat target="0, 0, 0" origin="-2.1213, -1.5, 2.1213" up="0, -1, 0"/>
+			<lookat target="0, 0, 0" origin="3.67394040e-16,  -1.50000000e+00,  -3.00000000e+00" up="0, -1, 0"/>
 		</transform>
 
 		<sampler type="ldsampler">
