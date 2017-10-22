@@ -8,6 +8,7 @@ simulation: # Simulation mode
     nRuns: 2
     nViews: 1
     comments: vacuum_cloud_beta_scale=10
+    screen_mode: horizontal # vertical # horizontal
 cams: # Cameras parameteres 
     IMX264 :
         sensorName: IMX264
@@ -80,13 +81,27 @@ screen: # Screen parameteres
     resYScreen: 1
     screenZPos: 0.0
     maxRadiance: 1.2    
-scene: # Scene parameteres  
+scene_vertical: # Scene parameteres - when screen is vertical 
     camsRadius: 3.0
     camsHeight: 0.0 #1.5
     upDirection: [0.0,0.0,1.0]
     horizon: [0.0, 1.0, 0.0]
     boundsTranslation: [0.0, 0.0, 0.0]  # target
     screenTranslation: [0, 2, 0] #[0.0, 0.0 , -0.51] #[0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
+    archAngleSize: 125
+    betaScale:
+        bg: 1
+        cloud: 3.33
+    albedo:
+        bg: water 0.0
+        cloud: 0.0
+scene_horizontal: # Scene parameteres - when screen is horizontal   
+    camsRadius: 3.0
+    camsHeight: 1.5
+    upDirection: [0.0,0.0,1.0]
+    horizon: [0.0, 1.0, 0.0]
+    boundsTranslation: [0.0, 0.0, 0.0]  # target
+    screenTranslation: [0.0, 0.0, -0.51] 
     archAngleSize: 360
     betaScale:
         bg: 1

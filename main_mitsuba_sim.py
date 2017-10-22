@@ -59,10 +59,11 @@ def setSimParams (fileName='', sensorName=''):
             
     
     ## SET SCREEN PARAMETERS
-    screenParams = sim_cfg['screen'] 
+    screenParams = sim_cfg['screen']
     
     ## SET CAMERAS SPACIAL SCENE PARAMETERS
-    sceneParams = sim_cfg['scene']
+    sceneParams = sim_cfg['scene_vertical'] if 'vertical' in simMode['screen_mode'] else sim_cfg['scene_horizontal']    
+    #sceneParams = sim_cfg['scene']
     sceneParams = configNViews(simMode,sceneParams)
         
     return camsParam, screenParams, sceneParams, simMode
