@@ -13,14 +13,14 @@ def transformLookAt(p, t, up):
     # p - self object position
     # t - terget object position
     # up - up direction
-    dir_vec = normalize(t-p)
-    left  = normalize(np.cross(up, dir_vec))
-    newUp = np.cross(dir_vec, left)
+    looking = normalize(t-p)
+    left  = normalize(np.cross(up, looking))
+    newUp = np.cross(looking, left)
 
     T = np.zeros([4,4])
     T[0:3,0]  = left
     T[0:3,1]  = newUp    
-    T[0:3,2] = dir_vec
+    T[0:3,2] = looking
     T[0:3,3] = p
     T[3,3]   = 1.0
 
@@ -29,7 +29,7 @@ def transformLookAt(p, t, up):
     T_inverse = np.zeros([4,4])
     T_inverse[0,0:3] = left
     T_inverse[1,0:3] = newUp    
-    T_inverse[2,0:3] = dir_vec
+    T_inverse[2,0:3] = looking
     T_inverse[0:3,3] = -q
     T_inverse[3,3]   = 1.0
 
@@ -39,8 +39,19 @@ def rotScene2Mitsuba (dir_vec):
     ## Mitsuba axis is rotate 90[degrees] around x axis from nvb.Scene axis
     ### dir_vec =  [origin target up] (1X9) 
     dir_vecs = np.reshape(dir_vec, (3,3), order='F')
+    # Rotating dir_vecs_rot(p,t,up) around x axis - 90 degrees
     dir_vecs_rot = np.matmul(rotX(90),dir_vecs)
-    return np.reshape(dir_vecs_rot, 9 , order='F' )
+    p = dir_vecs_rot[:,0]
+    t = dir_vecs_rot[:,1]
+    up =  dir_vecs_rot [:,2]
+    
+    # Re-projecting "up vector" at camera's coordinates system
+    looking = normalize(t-p)
+    left  = normalize(np.cross(up, looking))
+    new_up = np.cross(looking, left)    
+    new_dir_vec = np.hstack((p, t, new_up))
+    return new_dir_vec
+    #return np.reshape(dir_vecs_rot, 9 , order='F' )
 
 def calcAngleVectors(u, v):
     '''This function generates the angle between vectos u and v in degrees'''
@@ -91,7 +102,7 @@ def createCamsCirc(numViews , sceneParams):
     archRatio = np.float(archAngleSize) / 360
     theta   = np.linspace( archRatio * 360 ,0 , numViews,endpoint = False )
     axisX = np.array([1, 0, 0])
-    lookingAngle = calcAngleVectors(horizon,axisX )
+    lookingAngle = calcAngleVectors(horizon,axisX)
     
     #  Rotating arche's center - looking towords the horizon
     archCenterAngle = 180 + lookingAngle  
