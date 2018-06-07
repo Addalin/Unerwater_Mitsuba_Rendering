@@ -48,7 +48,7 @@ class Mitsuba(object):
                 ## Setting & adding emmiters to scene - diffusive screen, created out of multiple sub-screens
 		# a nice try to manipulate screen position - this is still not working, hence changing screen pos in hetvol.xml
                 # self.SetWideScreen()
-                # mitsuba.SetSunSky(np.array([[3, 300,3, 0,0,0, 0,0,1]]))
+                # self.SetSunSky(np.array([[3, 300,3, 0,0,0, 0,0,1]]))# TODO : this is not working
                 # TODO : fix overidin of : self.SetWideScreen(params['screenWidth'] , params['screenHeight'],params['resXScreen'],params['resYScreen'], params['screenZPos'],params['variantRadiance'])                
                 self.addSceneLights()
                 
@@ -59,7 +59,7 @@ class Mitsuba(object):
 		if 'SYS_NAME' in os.environ and os.environ['SYS_NAME']=='AWS' :
 			maxThreads = multiprocessing.cpu_count()
 		else:
-			maxThreads = min(multiprocessing.cpu_count(),30)
+			maxThreads = min(multiprocessing.cpu_count(),40)
                 for i in range(0, maxThreads):
                         self.scheduler.registerWorker(LocalWorker(i, 'wrk%i' % i))
                 self.scheduler.start()
@@ -184,14 +184,14 @@ class Mitsuba(object):
                    'medium' : { # commented out only for debugging - 
                                 'type' : 'homogeneous',
                                 'id': 'underwater',
-                                #'sigmaS' : Spectrum([0.4, 0.3, 0.3]),  #[0.02, 0.02, 0.02]),
-                                #'sigmaS' : Spectrum([0.0, 0.0, 0.0]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
-                                #'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),
+                                #'sigmaS' : Spectrum([0.0, 0.0, 0.0]),  
+                                #'sigmaA' : Spectrum([0.0, 0.0, 0.0]),  
 		                'sigmaS' : Spectrum([0.133, 0.1, 0.1]),  # for simulations with no scattering bg_sigmaA / cloud_sigmaA /water_sigmaA
 		                'sigmaA' : Spectrum([0.45, 0.06, 0.05]),  #[0.3, 0.3, 0.3]),		                
                                 'phase' : {
                                         'type' : 'hg',
                                         'g' : 0.9
+		                        #'g' : 0.0
                                     }    
                                 
                     }                            
