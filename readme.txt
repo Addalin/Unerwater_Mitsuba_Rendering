@@ -3,6 +3,18 @@
 ---------------------------------------------------------------
 
 ---------------------------------------------------------------
+#             Set paths in your local .bashrc file            #
+---------------------------------------------------------------
+# Set the Mitsuba installation paths
+source "/home/**username**/Mitsuba/setpath.sh"
+
+# Set the Mitsuba Simulation Folder paths
+export MITSUBA_SIM = " /home/**username**/mitsuba_sim/"
+export MITSUBA_PATH="/home/**username**/Mitsuba/dist"
+export MITSUBA_RESULTS="/home/**username**/mitsuba_sim/mitsuba_results/sim_results"
+
+
+---------------------------------------------------------------
 #                      update mitsuba code                    #
 ---------------------------------------------------------------
 cd $MITSUBA_SIM
