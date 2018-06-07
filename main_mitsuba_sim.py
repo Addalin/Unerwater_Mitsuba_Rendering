@@ -62,7 +62,7 @@ def setSimParams (fileName='', sensorName=''):
     screenParams = sim_cfg['screen']
     
     ## SET CAMERAS SPACIAL SCENE PARAMETERS
-    sceneParams = sim_cfg['scene_vertical'] if 'vertical' in simMode['screen_mode'] else sim_cfg['scene_horizontal']    
+    sceneParams = sim_cfg['scene_vertical'] if 'vertical' in simMode['screen_orientation'] else sim_cfg['scene_horizontal']    
     #sceneParams = sim_cfg['scene']
     sceneParams = configNViews(simMode,sceneParams)
         
@@ -83,7 +83,7 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
     
         ## BUILD AND SHOW SCENE
         if simMode['show_scene']:
-            showScene(scene_base_path,scene_name,cams,sceneParams,simMode['screen_mode'] )   
+            showScene(scene_base_path,scene_name,cams,sceneParams,simMode['screen_orientation'] )   
     
         
         simIm =  np.zeros(numIms,dtype=np.object)  # output images
@@ -98,9 +98,16 @@ def runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,scen
             if simMode['single_view'] :
                 cam = cams[0][None,:]
             else:
-                cam = cams[indCam][None,:]    
-            mitCam = mgo.rotScene2Mitsuba(cam)   
+                cam = cams[indCam][None,:] 
+            
+            # For side view --> Rotate cameras to be horizetal to scene    
+            mitCam = mgo.rotScene2Mitsuba(cam) 
             mitsuba.SetCamera(mitCam[None,:])
+            
+            ## For upper view --> keep cameras vertical to scene
+            #mitCam =  cams[indCam][None,:]    
+            #mitsuba.SetCamera(mitCam)
+            
             if simMode['increase_samples']: # increasing samples count - this is for noise statistics: variance vs. samplesCount; increasing every 10 images
                 camsParam['sampleCount'] = camsParam['sampleCount']*2 if (np.mod(numIms,10)==0 & numIms>1) else camsParam['sampleCount']
              
@@ -139,13 +146,13 @@ def showResults(simIm,numIms):
         plt.axis('off')
     plt.show()
     
-def showScene(scene_base_path,scene_name,cams,sceneParams, screen_mode):
+def showScene(scene_base_path,scene_name,cams,sceneParams, screen_orientation):
     """Show 3D scene"""
     obj_path = scene_base_path + '/' + scene_name
     shape_filename   = obj_path + '/mitsuba/' + scene_name + '.serialized'
     boundsPLYPath = obj_path + '/bounds' + '.ply'
     screenPLYPath = obj_path + '/wideScreen' + '.ply'
-    screenRot = np.eye(3) if screen_mode == 'vertical' else mgo.rotX(90)
+    screenRot = np.eye(3) if screen_orientation == 'vertical' else mgo.rotX(90)
     scene = nbv.Scene(boundsPLYPath , sceneParams['boundsTranslation'] , screenPLYPath , sceneParams['screenTranslation'], screenRot)
     scene.addCam(cams)
     #scene.addLight(lights)
@@ -195,9 +202,12 @@ def saveResults(simIm, cams, camsParam, sceneParams, simMode,runTime,runNo,start
     print 'Results are saved at:\n', resultsPath
     if append_new_log_line:
         log_res_new = {'resolution':resolution_str,       
-                   'nViews':simMode['nViews'],           
-                   'camera_radius':sceneParams['camsRadius'],  
-                   'scene':simMode['theme_type'],            
+                   'nViews':simMode['nViews'],   
+                   'scene':simMode['theme_type'],                   
+                   'camera_radius':sceneParams['camsRadius'], 
+                   'camera_height':sceneParams['camsHeight'] - sceneParams['screenTranslation'][2], #adding the height (z) of the screen wich is on floor
+                   'camers_arch_size':sceneParams['archAngleSize'],
+                   'screen_size':str(sceneParams['screenSize'][0])+' X '+str(sceneParams['screenSize'][1]),
                    'beta_scale':sceneParams['betaScale'][simMode['theme_type']],       
                    'albedo_bg':sceneParams['albedo']['bg'],        
                    'albedo_theme':sceneParams['albedo']['cloud'],     
@@ -237,20 +247,33 @@ if __name__=='__main__':
     global mitsuba_sim_path    
     mitsuba_sim_path = os.environ['MITSUBA_SIM'].replace('\\', '/')
     cfgFile = mitsuba_sim_path + '/sim_config.yml'
-    sensorName = 'test1' #'test1'#'IMX264'#'test1'#'IMX264'
+    sensorName = 'IMX264'#'test2' #'test1'#'IMX264'#'test1'#'IMX264'
     
     camsParam, screenParams, sceneParams, simMode = setSimParams (cfgFile,sensorName)
     scene_base_path = mitsuba_sim_path + '/3D_models' 
     scene_name = 'hetvol'
-    
+        
     ## RUN SIMULATION:
-    for nViews in [3] : #,7,8 -- currently not including 7,8 nViews
+    for nViews in [4] : #,7,8 -- currently not including 7,8 nViews
         print 'Start simulation for nViews = ' + str(nViews)
-        simMode['nViews'] = nViews
+        
         # update nViews 
+        simMode['nViews'] = nViews
         sceneParams = configNViews(simMode,sceneParams)
-        tic=timeit.default_timer()
-        runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams)
-        toc=timeit.default_timer()
-        print 'Finished simulation for nViews = ' + str(nViews)
-        print 'elapsed time ' + str(toc - tic) + ' sec' #elapsed time in seconds
+        
+        # run for different angles
+        angles = sceneParams['archAngleSize'] 
+        heights = sceneParams['camsHeight']
+        camsRad = sceneParams['camsRadius']
+        for rad in camsRad:
+            sceneParams['camsRadius'] = rad
+            for ang in angles:
+                sceneParams['archAngleSize'] = ang
+                for height in heights:
+                    sceneParams['camsHeight'] = height
+                    print "Start run for cameras at height " + str(height - sceneParams['screenTranslation'][2]) + "[m] with arch angle size "+str(ang)+' [deg]'
+                    tic=timeit.default_timer()
+                    runSimulation(scene_base_path,scene_name,simMode,camsParam,screenParams,sceneParams)
+                    toc=timeit.default_timer()
+                    print 'Finished simulation for nViews = ' + str(nViews)
+                    print 'elapsed time ' + str(toc - tic) + ' sec' #elapsed time in seconds
