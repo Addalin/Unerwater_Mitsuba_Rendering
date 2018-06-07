@@ -3,12 +3,13 @@ simulation: # Simulation mode
     show_results: true
     single_view: false
     increase_samples: false
-    save_results: false
-    theme_type: cloud_rgb #bg # cloud_green # cloud_blue # cloud_red
-    nRuns: 2
+    save_results: true
+    theme_type: cloud_rgb #cloud_rgb #bg_rgb  #bg # cloud_green # cloud_blue # cloud_red
+    nRuns: 2   # remeber to change back to 2 !!!!! 
     nViews: 1
-    comments: vacuum_cloud_beta_scale=10
-    screen_mode: horizontal # vertical # horizontal
+    comments: horizontal_screen_water_scattering_horizontal_cloud_cyclic_spiral_view
+    screen_orientation: horizontal # vertical # horizontal
+    camera_view: side_view # top_view 
 cams: # Cameras parameteres 
     IMX264 :
         sensorName: IMX264
@@ -58,21 +59,33 @@ cams: # Cameras parameteres
         rgb:
             wellDepth: 10632.0
             readNoise: 2.0
-            bitDepth: 12
+            bitDepth: 123
         du: 3.45e-6 
         dv: 3.45e-6 
     test1 :
         sensorName: test1
         cameraName: camera-test1
-        nWidth: 100
-        nHeight: 100
+        nWidth: 400 # 768
+        nHeight: 400 # 576
         fov :  28.0725
-        fovAxis : x
+        fovAxis : y
         wellDepth: 10632.0
         readNoise: 2.0
         bitDepth: 12
         du: 3.45e-6 
         dv: 3.45e-6 
+    test2 :
+        sensorName: test2
+        cameraName: camera-test2
+        nWidth: 640 
+        nHeight: 400 
+        fov :  28.0725
+        fovAxis : y
+        wellDepth: 10632.0
+        readNoise: 2.0
+        bitDepth: 12
+        du: 3.45e-6 
+        dv: 3.45e-6
 screen: # Screen parameteres
     variantRadiance: false
     screenWidth: 50.0
@@ -84,7 +97,7 @@ screen: # Screen parameteres
 scene_vertical: # Scene parameteres - when screen is vertical 
     camsRadius: 3.0
     camsHeight: 0.0 #1.5
-    upDirection: [0.0,0.0,1.0]
+    upDirection: [0.0,0.0,1.0] # changed from [0.0,0.0,1.0]
     horizon: [0.0, 1.0, 0.0]
     boundsTranslation: [0.0, 0.0, 0.0]  # target
     screenTranslation: [0, 2, 0] #[0.0, 0.0 , -0.51] #[0, 2, 0]  # screen behind the target - this translation is for visualization coordinates (not for Mitsuba!!!)
@@ -96,16 +109,18 @@ scene_vertical: # Scene parameteres - when screen is vertical
         bg: water 0.0
         cloud: 0.0
 scene_horizontal: # Scene parameteres - when screen is horizontal   
-    camsRadius: 3.0
-    camsHeight: 1.5
-    upDirection: [0.0,0.0,1.0]
+    camsRadius: [2.201] #[2.201 ,1.601 ]  #[2.1 , 2.5 ] #[3.0 , 2.5] #
+    camsHeight:  [2.2] #[2.2 ,1.6] # [2.101 , 2.501 ] #[1.6 , 2.2 ] #[2.81 , 1.81 , 0.81] # #[2.5,1.5, 0.5]
+    upDirection: [0.0,0.0,1.0]  
     horizon: [0.0, 1.0, 0.0]
     boundsTranslation: [0.0, 0.0, 0.0]  # target
-    screenTranslation: [0.0, 0.0, -0.51] 
-    archAngleSize: 360
+    screenTranslation: [0.0, 0.0, -0.2] 
+    screenSize: [1.0 , 1.0]
+    archAngleSize: [360] #[120,240,360]
+    pathType: spiral_cyclic #arch # spiral
     betaScale:
         bg: 1
-        cloud: 3.33
+        cloud: 12.2 # 12.2  for water+particales with MFP = 3.33 [1/m]
     albedo:
-        bg: water 0.0
-        cloud: 0.0
+        bg: water #vacuume # water # water 0.0 - for water w.o scattering
+        cloud: smoke_blue #smoke  # smoke_red # smoke_green # smoke_blue #water
