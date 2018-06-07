@@ -70,7 +70,7 @@ class Scene(object):
 
     #  -------------- Private methods --------------        
     
-    # Plot objera        
+    # Plot object       
     def __plotObj(self,obj,obj_shape,base_color,obj_name):
         # objera center
         mi.points3d(obj[0],obj[1],obj[2],color=base_color,scale_factor=0.2) 
