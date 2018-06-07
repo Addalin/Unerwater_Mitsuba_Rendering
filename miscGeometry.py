@@ -1,6 +1,6 @@
 import os, sys
 import numpy as np
-
+import numpy.matlib
 """  miscGeometry.py General purpose functions """
 
 def normalize(v):
@@ -115,10 +115,33 @@ def createCamsCirc(numViews , sceneParams):
     theta =  np.deg2rad(theta + rotate2center)
     
     # Calculate cameras positions
-    xCam   = radius * np.sin(theta)
-    yCam   = radius * np.cos(theta)
-    zCam   = camHeight * np.ones(numViews)
-    
+    if 'arch' in sceneParams['pathType'] :
+        camRad = np.sqrt(np.abs(np.square(radius)-np.square(camHeight))) # Pythagorean theorem
+        xCam   = camRad * np.sin(theta)
+        yCam   = camRad * np.cos(theta)
+        zCam   = camHeight * np.ones(numViews)
+    elif 'spiral' in sceneParams['pathType']:
+        xCam  =  np.ones(numViews)
+        yCam  =  np.ones(numViews)
+        if 'cyclic' in sceneParams['pathType']:
+            zCam = np.linspace(1.8, camHeight, num=np.floor(numViews/3), endpoint=False, retstep=False, dtype=None)
+            zCam = np.matlib.repmat(zCam, 1,3)
+            zCam = zCam[0]
+            theta = np.linspace( archRatio * 360 ,0 , numViews-1,endpoint = False )
+            for i,zc in enumerate(zCam):
+                camRad = np.sqrt(np.abs(np.square(radius)-np.square(zCam[i]))) # Pythagorean theorem
+                xCam[i]   = camRad * np.sin(theta[i])
+                yCam[i]   = camRad * np.cos(theta[i])
+            zCam = np.insert(zCam,zCam.size,(camHeight))
+            xCam[-1] = 0.01
+            yCam[-1] = 0
+        else:
+            zCam = np.linspace(1.6, camHeight, num=numViews, endpoint=True, retstep=False, dtype=None)
+            for i,zc in enumerate(zCam):
+                camRad = np.sqrt(np.abs(np.square(radius)-np.square(zc))) # Pythagorean theorem
+                xCam[i]   = camRad * np.sin(theta[i])
+                yCam[i]   = camRad * np.cos(theta[i])
+                
     # Retreives numViews of toWorld transform vectors for each camera [self position, target = (0,0,0), up direction = (0,0,1)]
     camsPos = np.vstack( ( xCam , yCam , zCam ) ).transpose()
     cams =  setCamToWorldVec (camsPos , upDirection, target)
