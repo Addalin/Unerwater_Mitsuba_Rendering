@@ -14,16 +14,22 @@
 
 		<volume name="density" type="gridvolume">
 			<string name="filename" value="smoke.vol"/>
-			<!--<transform name="toWorld">
-				<rotate z="1" angle="180"/>
-			</transform>-->
+			<!--<string name="filename" value="smoke_half.vol"/>-->
+			<!--<string name="filename" value="hsmoke.vol"/>-->
+			<transform name="toWorld">
+				<translate x="0" y="0" z="0"/>
+				<rotate x="1" angle="90"/>  
+			</transform>
+			<!--<transform name="toWorld">-->
+				<!--<translate x="0" y="0" z="0"/>-->
+				<!--<rotate z="1" angle="180"/>-->
+			<!--</transform>-->
 		</volume>
-		<float name="scale" value="10.0"/>
+		<float name="scale" value="12.2"/>
 
 		<volume name="albedo" type="constvolume">
 			<!--<rgb name="value" value="0.2281, 0.6250, 0.6667"/>-->
 			<rgb name="value" value="0.0, 0.0, 0.0"/>
-
 		</volume>
 
 		<phase type="hg">
@@ -38,13 +44,23 @@
 	<medium type="heterogeneous" id="smoke_red">
 	
 		<string name="method" value="woodcock"/>
-		<float name="scale" value="1"/>
 		<volume name="density" type="gridvolume">
 			<string name="filename" value="smoke_water_dscaled12_2_red.vol"/>
+			<!--<string name="filename" value="smoke_water_noscatter_dscaled12_2_red.vol"/>-->
+			<transform name="toWorld">
+				<translate x="0" y="0" z="0"/>
+				<rotate x="1" angle="90"/>
+			</transform>
 		</volume>
 		<float name="scale" value="12.2"/>
+
 		<volume name="albedo" type="gridvolume">
+			<!--<string name="filename" value="albedo_water_rgb_noscatter.vol"/>-->
 			<string name="filename" value="albedo_dscaled12_2_rgb.vol"/>
+			<transform name="toWorld">
+				<translate x="0" y="0" z="0"/>
+				<rotate x="1" angle = "90"/>
+			</transform>
 		</volume>
 		
 		<phase type="hg">
@@ -55,13 +71,24 @@
  	<medium type="heterogeneous" id="smoke_green">
 	
 		<string name="method" value="woodcock"/>
-		<float name="scale" value="1"/>
 		<volume name="density" type="gridvolume">
 			<string name="filename" value="smoke_water_dscaled12_2_green.vol"/>
+			<transform name="toWorld">
+				<translate x="0" y="0" z="0"/>
+				<rotate x="1" angle="90"/>
+			</transform>
+			
+			<!--<string name="filename" value="smoke_water_noscatter_dscaled12_2_green.vol"/>-->
 		</volume>
 		<float name="scale" value="12.2"/>
+		
 		<volume name="albedo" type="gridvolume">
+			<!--<string name="filename" value="albedo_water_rgb_noscatter.vol"/>-->
 			<string name="filename" value="albedo_dscaled12_2_rgb.vol"/>
+			<transform name="toWorld">
+				<translate x="0" y="0" z="0"/>
+				<rotate x="1" angle="90"/>
+			</transform>
 		</volume>
 		
 		<phase type="hg">
@@ -72,18 +99,32 @@
 	<medium type="heterogeneous" id="smoke_blue">
 	
 		<string name="method" value="woodcock"/>
-		<float name="scale" value="1"/>
 		<volume name="density" type="gridvolume">
 			<string name="filename" value="smoke_water_dscaled12_2_blue.vol"/>
+			<transform name="toWorld">
+				<translate x="0" y="0" z="0"/>
+				<rotate x="1" angle="90"/>
+			</transform> <!--<string name="filename" value="smoke_water_noscatter_dscaled12_2_blue.vol"/>-->
 		</volume>
 		<float name="scale" value="12.2"/>
+		
+		<!--<volume name="albedo" type="constvolume">-->
+			<!--<rgb name="value" value="0.0, 0.0, 0.0"/>-->
+		<!--</volume>-->
 		<volume name="albedo" type="gridvolume">
+			<!--<string name="filename" value="albedo_water_rgb_noscatter.vol"/>-->
 			<string name="filename" value="albedo_dscaled12_2_rgb.vol"/>
+			<transform name="toWorld">
+				<translate x="0" y="0" z="0"/>
+				<rotate x="1" angle="90"/>
+			</transform>
 		</volume>
+		
 		
 		<phase type="hg">
 			<float name="g" value="0.9"/>
 		</phase>
+		
 
 	</medium>
 
@@ -138,10 +179,11 @@
 	<medium type="homogeneous" id="underwater">
 		<rgb name="sigmaS" value="0.133, 0.1, 0.1"/> 
 		<rgb name="sigmaA" value="0.45, 0.06, 0.05"/>
-		<!--<rgb name="sigmaA" value="0.0, 0.0, 0.0"/>-->
+		<!--<rgb name="sigmaS" value="0.0, 0.0, 0.0"/>-->
 		
 		<phase type="hg">
 			<float name="g" value="0.9"/>
+			<!--<float name="g" value="0.0"/>-->
 		</phase>
 	</medium>
  
@@ -156,25 +198,27 @@
 	</medium>
 
 	<shape type="obj" id="aquarium">
-		<string name="filename" value="bounds_large_wide_int_diff.obj"/>
+		<!--<string name="filename" value="bounds_large_wide_int_half_diff.obj"/>-->
+		<string name="filename" value="bounds_large_wide_int_diff_cube.obj"/>
 		<transform name="toWorld">
 			<translate x="0" y="0" z="0"/>
 		</transform>
 	
 		<ref name="interior" id="underwater"/>
+		<!--<ref name="interior" id="vacuum"/>-->
 		
 		<!--<ref name="exterior" id="underwater"/>-->
-		<!--<ref name="exterior" id="smoke"/>-->
+		<ref name="exterior" id="smoke"/>
 		<!--<ref name="exterior" id="smoke_red"/>-->
 		<!--<ref name="exterior" id="smoke_green"/>-->
-		<ref name="exterior" id="smoke_blue"/>
+		<!--<ref name="exterior" id="smoke_blue"/>-->
 		
 		<!--<ref name="interior" id="vacuum"/>-->
 		<!--<ref name="exterior" id="vacuum"/>-->
-	    
+	    createCamsCirc
 		<bsdf type="dielectric">
-			<!--string name="intIOR" value="vacuum"/>
-			<string name="extIOR" value="vacuum"/-->
+			<!--<string name="intIOR" value="vacuum"/>-->
+			<!--<string name="extIOR" value="vacuum"/>-->
 			<string name="intIOR" value="water"/>
 			<string name="extIOR" value="water"/>
 		</bsdf>
@@ -182,20 +226,42 @@
 	</shape>
   
  	<shape name="screen" type="obj">
-		<string name="filename" value="extraWideScreen.obj"/>
-		
+		<!--<string name="filename" value="extraWideScreen.obj"/>-->
+		<string name="filename" value="rect1_screen.obj"/>
 		<bsdf type="diffuse">
 			<spectrum name="spectrumProperty" value="0.78" intent="reflectance"/>
 		</bsdf>
 
 		<emitter type="area">
-			<spectrum name="radiance" value="1"/>
+			<spectrum name="radiance" value="1.0"/>
 		</emitter>
 		<transform name="toWorld">
-			<translate z="0.51"/>
+			<!--highlight for horizontal screen-->
 			<rotate x="1" angle="-90.0"/>
+			<translate y="0.2"/>
+			<!--<translate y="0.51"/>-->
+			<!--highlight for vertical screen-->
+			<!--<translate z="0.51"/>-->
+			<!--<rotate x="1" angle="-90.0"/>-->
+			<!--<rotate x="1" angle="180.0"/>-->
 		</transform>
 	</shape> 
+	
+	<!--<shape type="sphere">-->
+		<!--<point name="center" x="0" y="-20" z="0"/>-->
+		<!--<float name="radius" value=".2"/>-->
+
+		<!--<emitter type="area">-->
+			<!--<spectrum name="radiance" value="400"/>-->
+		<!--</emitter>-->
+	<!--</shape>-->
+	
+	<!--<shape type="obj" id="frame">-->
+		<!--<string name="filename" value="frame.obj"/>-->
+		<!--<transform name="toWorld">-->
+			<!--<translate x="0" y="-3.03" z="0"/>-->
+		<!--</transform>-->
+	<!--</shape>-->
 
 <sensor type="perspective">
 		<float name="fov" value="28.0725"/>
@@ -218,6 +284,7 @@
 			<rfilter type="gaussian"/>
 		</film>
 
-		<ref id="underwater"/>
+		<!--<ref id="underwater"/>-->
+		<ref id="vacuum"/>
 	</sensor>
 </scene>
