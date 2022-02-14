@@ -7,12 +7,9 @@ https://opg.optica.org/oe/abstract.cfm?uri=oe-27-12-a766
 
 
 ---------------------------------------------------------------
-# List of commands to run before operating mitsuba simulation # 
----------------------------------------------------------------
+# List of commands to run before operating mitsuba simulation 
 
----------------------------------------------------------------
-##                      update mitsuba code                    #
----------------------------------------------------------------
+##                      update mitsuba code                    
 cd $MITSUBA_SIM
 git pull 
 
@@ -27,7 +24,7 @@ cd $MITSUBA_SIM
 
 
 ---------------------------------------------------------------
-##                    update configurations                    #
+##                    update configurations                 
 1. create mitsuba_sim_results folder (as saved in environment path !)
 2. update: sim_config.yml : scene : bg / cloud , nRuns : 2 
 3. update: hetvol.xml : cloud_water_green.vol / cubic_water_green.vol
