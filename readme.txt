@@ -1,3 +1,11 @@
+Citation
+---
+This work is part of simulations done in 
+
+Adi Vainiger, Yoav Y. Schechner, Tali Treibitz, Aviad Avni, and David S. Timor, "Optical wide-field tomography of sediment resuspension," Opt. Express 27, A766-A778 (2019)
+https://opg.optica.org/oe/abstract.cfm?uri=oe-27-12-a766
+
+
 ---------------------------------------------------------------
 # List of commands to run before operating mitsuba simulation # 
 ---------------------------------------------------------------
