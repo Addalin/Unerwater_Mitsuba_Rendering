@@ -18,7 +18,7 @@ cd ..
 
 rm -r $MITSUBA_SIM
 
-git clone https://github.com/Addalin/mitsuba_sim.git
+git clone https://github.com/Addalin/Unerwater_Mitsuba_Rendering.git
 
 cd $MITSUBA_SIM
 
