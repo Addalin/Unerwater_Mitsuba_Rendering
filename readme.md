@@ -23,7 +23,7 @@ https://opg.optica.org/oe/abstract.cfm?uri=oe-27-12-a766
 
 ---------------------------------------------------------------
 ##                    update configurations                 
-1. create mitsuba_sim_results folder (as saved in environment path !)
+1. create mitsuba_sim_results folder (make a similar variable in environment path )
 2. update: sim_config.yml : scene : bg / cloud , nRuns : 2 
 3. update: hetvol.xml : cloud_water_green.vol / cubic_water_green.vol
 4. update: sensorName in main_mitsuba_sim.py
