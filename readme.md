@@ -5,6 +5,8 @@ This work is part of simulations done in
 Adi Vainiger, Yoav Y. Schechner, Tali Treibitz, Aviad Avni, and David S. Timor, "Optical wide-field tomography of sediment resuspension," Opt. Express 27, A766-A778 (2019)
 https://opg.optica.org/oe/abstract.cfm?uri=oe-27-12-a766
 
+This repo relies on [Mitsuba 0.6](https://github.com/mitsuba-renderer/mitsuba) rendering project .
+
 [//]: < --------------------------------------------------------------->
 
 [//]: < List of commands to run before operating mitsuba simulation > 
@@ -20,6 +22,8 @@ https://opg.optica.org/oe/abstract.cfm?uri=oe-27-12-a766
 [//]: < git clone https://github.com/Addalin/Unerwater_Mitsuba_Rendering.git >
 
 [//]: < cd $MITSUBA_SIM >
+
+
 
 ---------------------------------------------------------------
 ##                    update configurations                 
